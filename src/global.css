@@ -1,0 +1,10 @@
+@import "~antd-mobile/dist/antd-mobile.css";
+@import "assets/iconfont.css";
+
+html, body, #root {
+ width: 100%;
+}
+
+body {
+  margin: 0;
+}
