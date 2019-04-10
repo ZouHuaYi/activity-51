@@ -5,9 +5,6 @@ import React, { Component } from 'react';
 import styles from './index.css';
 import { connect } from 'dva';
 import { Toast} from 'antd-mobile';
-
-
-
 const logo = require('@/assets/ic_logo.png');
 
 
@@ -20,6 +17,8 @@ const logo = require('@/assets/ic_logo.png');
     state = {
         phone:'',
         code:'',
+        password:'',
+        repasssword:'',
     }
 
     componentDidMount(){
@@ -36,23 +35,67 @@ const logo = require('@/assets/ic_logo.png');
         })
     }
 
+   verifyFormFun = (type)=>{
+      const keyType = type.split(',');
+      const { phone,code,password,repassword } = this.state;
+      let errorText = [];
+      if(keyType.indexOf('phone')>-1){
+        if(phone===''){
+          errorText.push('手机号码不能为空');
+        }
+        if(!/^1\d{10}$/.test(phone)){
+          errorText.push('手机号码格式不正确');
+        }
+      }
+
+      if(keyType.indexOf('code')>-1){
+        if(code===''){
+          errorText.push('验证码不能为空');
+        }
+        if(''+code.length<6){
+          errorText.push('验证码不等于6位数');
+        }
+      }
+
+      if(keyType.indexOf('password')>-1){
+        if(password===''){
+          errorText.push('密码不能为空');
+        }
+        if(''+password.length<6){
+          errorText.push('密码不能小于6位数');
+        }
+        if(password!==repassword){
+          errorText.push('两次输入的密码不相等');
+        }
+      }
+      if(errorText.length>0){
+        Toast.info(errorText[0],1);
+        return false;
+      }
+      return true;
+
+   }
+
+
+    handleLogin = ()=>{
+      const {phone,code} = this.state;
+      if(!this.verifyFormFun('phone,code')) return;
+      this.props.dispatch({
+        type: 'login/loginFun',
+        phoneAndCode:{phone,code}
+      });
+
+    }
 
     handleSendCode =()=>{
         const {phone} = this.state;
-        if(!this.props.login.verifyText) return;
+        if(!this.props.login.sendCodeAbleClick) return;
+        if(!this.verifyFormFun('phone')) return;
 
-        if(phone===''){
-            Toast.info('手机号码不能为空', 1);
-            return;
-        }
-        if(!/^1\d{10}$/.test(phone)){
-            Toast.info('手机号码格式不正确', 1);
-            return;
-        }
         const {dispatch} = this.props;
         dispatch({
             type:'login/sendCodeFun',
-            phone:phone
+            phone:{phone}
         })
     }
     
@@ -101,7 +144,7 @@ const logo = require('@/assets/ic_logo.png');
                             <a className={styles.vip} href="">《用户注册协议》</a>
                         </div>
                     </div>
-                    <a className={styles.sigin} href="javascript:;">登录</a>
+                    <a className={styles.sigin} href="javascript:;" onClick={this.handleLogin}>登录</a>
                 </div>
             </div>
 

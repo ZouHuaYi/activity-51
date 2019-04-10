@@ -42,7 +42,7 @@ export default {
   outputPath:'./ok',
   proxy: {
     '/api': {
-      target: 'http://test.topmei3mei.com/',
+      target: 'http://admin.topmei3mei.com/',
       changeOrigin: true,
       pathRewrite: {
         '^/api': ''

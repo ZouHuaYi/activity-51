@@ -3,38 +3,49 @@
  */
 import {loginApi,sendCOde} from '@/api/login'
 import { Toast} from 'antd-mobile';
+import { delay } from '@/utils/utils';
+import {getToken,setToken} from "../utils/jscookie";
 
 export default{
     namespace:'login',
     state:{
         passworldStatus:false,
-        verifyDisable:true,
+        verifyDisable:false,
         verifyText:'获取验证码',
+        sendCodeAbleClick:true,
     },
     effects:{
+        *bindWxChatUnion(){
+
+        },
         *loginFun({phoneAndCode},{call,put}){
             const response = yield call(loginApi,phoneAndCode);
-            console.log(response,phoneAndCode)
+            if(response.messageCode==900){
+              // 登陆成功 绑定 微信
+              setToken(response.data.token);
+
+
+            }
+
         },
         *sendCodeFun({phone},{call,put}){
-            console.log(phone)
+            yield put({type:'changeVerifyDisable', disabled:false});
             const response = yield call(sendCOde,phone);
             if(response.messageCode==900){
                 Toast.info('验证码发送成功', 2);
-                put({type:'changeVerifyDisable', disabled:false});
+                yield put({type:'changeSendCodeClick',sendDisable:false});
                 let tim = 59;
-                let t = setInterval(()=>{
-                    tim--;
-                    put({type:'changeVerifyText',text:`${tim}s后重试`});
-                    if(tim===0){
-                        clearInterval(t);
-                        put({type:'changeVerifyText',text:`重新获取`});
-                    }
-                },1000)
+                while (tim>0){
+                  tim--;
+                  yield call(delay,1000);
+                  yield put({type:'changeVerifyText',text:`${tim}s后重试`});
+                }
+
+              yield put({type:'changeSendCodeClick',sendDisable:true});
+              yield put({type:'changeVerifyText',text:`重新获取`});
             }else {
                 Toast.info(response.message?response.message:'验证码发送失败', 2);
             }
-
         }
     },
     reducers:{
@@ -49,6 +60,12 @@ export default{
                 ...state,
                 verifyDisable:action.disabled
             }
-        }
+        },
+        changeSendCodeClick(state,action){
+          return{
+            ...state,
+            sendCodeAbleClick:action.sendDisable,
+          }
+        },
     },
 }
