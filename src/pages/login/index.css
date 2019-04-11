@@ -88,3 +88,6 @@
 .tips .vip{
    color: #17F2B2;
 }
+.passwordbox{
+  display: none;
+}

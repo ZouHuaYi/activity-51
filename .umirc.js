@@ -11,7 +11,11 @@ export default {
       antd: true,
       dva: true,
       dynamicImport: false,
-      title: 'activity-51',
+      title: {
+        defaultTitle:'美上美',
+        userLocale:false,
+        format:'美上美{separator}{parent}{separator}{current}',
+      },
       dll: false,
       routes: {
         exclude: [
@@ -37,6 +41,7 @@ export default {
         "minPixelValue": 2,
         "propList": ["*"]
       })
+
   },
   publicPath:'./',
   outputPath:'./ok',
