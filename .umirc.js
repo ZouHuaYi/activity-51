@@ -1,5 +1,9 @@
-
 // ref: https://umijs.org/config/
+
+// const PurifyCssWebpack  = require('purifycss-webpack');
+// const glob = require('glob');
+// const path = require('path');
+
 export default {
   treeShaking: true,
   "lessLoaderOptions": {
@@ -31,7 +35,7 @@ export default {
   chainWebpack(config,{ webpack }){
     config.module
       .rule('postcss')
-      .test(/\.css$/)
+      .test( /\.(css|less)(\?.*)?$/)
       .use('postcss-loader')
       .loader('px2rem-loader')
       .before('postcss-loader')
@@ -41,10 +45,24 @@ export default {
         "minPixelValue": 2,
         "propList": ["*"]
       })
-
   },
-  publicPath:'./',
-  outputPath:'./ok',
+  autoprefixer:{ // 配置css兼容问题
+    browsers: ['last 7 iOS versions', 'last 3 versions', '> 1%'],
+    flexbox: true
+  },
+  extraPostCSSPlugins:[],
+  extraBabelPlugins:[ // 提前加载 css文件
+    ["import",
+      { "libraryName": "antd-mobile", "style": "css" }
+    ]
+  ],
+  base:'/',
+  outputPath:'./activity',
+  cssPublicPath:'./',
+  exportStatic:{
+    dynamicRoot:false
+  },
+  history: 'hash',
   proxy: {
     '/api': {
       target: 'http://test.topmei3mei.com/',
@@ -54,4 +72,5 @@ export default {
       }
     }
   },
+
 }
