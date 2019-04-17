@@ -33,6 +33,25 @@
 .group{
     width: 100%;
     border-bottom: 1px solid #f7f7f7;
+    position: relative;
+}
+.group .input.on:after{
+  position: absolute;
+  content: " ";
+  width: 100%;
+  border-bottom: 2Px solid #17F2B2;
+  bottom: -1px;
+  left: 0;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  animation: lineShow 0.3s linear;
+}
+@keyframes lineShow {
+  0%{
+    transform: scaleX(0);
+  }
+  100%{
+    transform: scaleX(1);
+  }
 }
 .input{
     width: 100%;
@@ -41,6 +60,7 @@
     height: 40px;
     line-height: 40px;
     font-size: 32px;
+    position: relative;
 }
 .group .icon{
     font-size: 40px;

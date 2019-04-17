@@ -35,7 +35,7 @@ export default {
   chainWebpack(config,{ webpack }){
     config.module
       .rule('postcss')
-      .test( /\.(css|less)(\?.*)?$/)
+      .test( /\.css(\?.*)?$/)
       .use('postcss-loader')
       .loader('px2rem-loader')
       .before('postcss-loader')

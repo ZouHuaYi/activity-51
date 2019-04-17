@@ -23,3 +23,30 @@ export function browerType() {
   const wx = /MicroMessenger/i;
   return  app.test(ua) ? 'isApp' : (wx.test(ua) ? 'isWechat' : 'isWeb');
 }
+
+// 添加class
+export function addClass(obj, sClass) {
+  var aClass = obj.className.split(' ');
+  if (!obj.className) {
+    obj.className = sClass;
+    return;
+  }
+  for (var i = 0; i < aClass.length; i++) {
+    if (aClass[i] === sClass) return;
+  }
+  obj.className += ' ' + sClass;
+}
+
+// 去除class
+//去除class类名
+export function removeClass(obj, sClass) {
+  var aClass = obj.className.split(' ');
+  if (!obj.className) return;
+  for (var i = 0; i < aClass.length; i++) {
+    if (aClass[i] === sClass) {
+      aClass.splice(i, 1);
+      obj.className = aClass.join(' ');
+      break;
+    }
+  }
+}

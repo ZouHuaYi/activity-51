@@ -7,7 +7,7 @@ import styles from './index.css';
 import { connect } from 'dva';
 import { Toast} from 'antd-mobile';
 import { CSSTransition } from 'react-transition-group';
-
+import { addClass ,removeClass } from '@/utils/utils';
 
 const logo = require('@/assets/ic_logo.png');
 
@@ -16,12 +16,17 @@ const logo = require('@/assets/ic_logo.png');
     loginLoading: loading.effects['login/loginFun']
 }))
  class Login extends Component{
-
-    state = {
+    constructor(props){
+      super(props);
+      this.state = {
         phone:'',
         code:'',
         password:'',
         repassword:'',
+        onStatusIndex:-1,
+      }
+      this.inputPhone = React.createRef();
+
     }
 
     componentDidMount(){
@@ -116,6 +121,20 @@ const logo = require('@/assets/ic_logo.png');
           })
     }
 
+    inputFocus = ($event) => {
+      const parent = $event.target.parentNode;
+      if(parent){
+        addClass(parent,styles.on);
+      }
+    }
+
+    inputBlur = ($event) => {
+      const parent = $event.target.parentNode;
+      if(parent){
+        removeClass(parent,styles.on);
+      }
+    }
+
     render(){
         const {passwordStatus,verifyDisable,verifyText} = this.props.login;
         const {phone,code} = this.state;
@@ -129,13 +148,13 @@ const logo = require('@/assets/ic_logo.png');
                         <div className={styles.group}>
                             <div className={styles.input}>
                                 <i className={styles.icon+" iconfont icon-shouji"}></i>
-                                <input type="number" value={phone} onChange={this.astrictInputValue.bind(this,11,'phone')} placeholder="请输入手机号码" />
+                                <input type="number" onFocus={this.inputFocus} onBlur={this.inputBlur} value={phone} onChange={this.astrictInputValue.bind(this,11,'phone')} placeholder="请输入手机号码" />
                             </div>
                         </div>
                         <div className={styles.group}>
                             <div className={styles.input}>
                                 <i className={styles.icon+" iconfont icon-yanzhengma"}></i>
-                                <input type="number" value={code} disabled={verifyDisable} onChange={this.astrictInputValue.bind(this,6,'code')} placeholder="请输入验证码" />
+                                <input type="number" value={code} disabled={verifyDisable} onFocus={this.inputFocus} onBlur={this.inputBlur} onChange={this.astrictInputValue.bind(this,6,'code')} placeholder="请输入验证码" />
                                 <a className={styles.vcode} onClick={this.handleSendCode} href="javascript:;">{verifyText}</a>
                             </div>
                         </div>
@@ -144,13 +163,13 @@ const logo = require('@/assets/ic_logo.png');
                             <div className={styles.group}>
                               <div className={styles.input}>
                                 <i className={styles.icon+" iconfont icon-mima"}></i>
-                                <input type="password" onChange={this.astrictInputValue.bind(this,-1,'password')} placeholder="请输入密码" />
+                                <input type="password" onFocus={this.inputFocus} onBlur={this.inputBlur} onChange={this.astrictInputValue.bind(this,-1,'password')} placeholder="请输入密码" />
                               </div>
                             </div>
                             <div className={styles.group}>
                               <div className={styles.input}>
                                 <i className={styles.icon+" iconfont icon-mima"}></i>
-                                <input type="password" onChange={this.astrictInputValue.bind(this,-1,'repassword')} placeholder="再次确认密码" />
+                                <input type="password" onFocus={this.inputFocus} onBlur={this.inputBlur} onChange={this.astrictInputValue.bind(this,-1,'repassword')} placeholder="再次确认密码" />
                               </div>
                             </div>
                           </div>
@@ -163,7 +182,6 @@ const logo = require('@/assets/ic_logo.png');
                     <a className={styles.sigin} href="javascript:;" onClick={this.handleLogin}>登录</a>
                 </div>
             </div>
-
         );
     }
 }
