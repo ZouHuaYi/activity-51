@@ -7,23 +7,56 @@ import {
   Toast
 } from 'antd-mobile';
 import { createForm } from 'rc-form';
+import styles from './index.css';
+import ThreeClassSelect from '@/components/AreaSelect/ThreeClassSelect';
+import { connect } from 'dva';
+import {addAddress} from "@/api/common";
 
+@connect(({loading})=>({
+  addAddressLoading:loading.effects['global/addAddressFun']
+}))
 class AddAddress extends Component{
+
+  state={
+    areaSelectStatus:false,
+  }
 
   handleClick = () => {
     this.props.form.validateFields((err,value)=>{
-      console.log(err);
       if(err){
         const first = err[Object.keys(err)[0]].errors[0].message;
         Toast.info(first, 1);
+        return;
       }
+      if(this.props.addAddressLoading) return;
+      console.log(value)
+      this.props.dispatch({
+        type:'global/addAddressFun',
+        addressInfoData:value,
+      })
+
     })
   }
 
+  selectComfig = (val) => {
+    console.log(val);
+    if(val.length>0){
+      this.setState({
+        areaSelectStatus:false,
+      })
+      this.props.form.setFieldsValue({"area":val.join('')})
+    }
+  }
+
+  selectCancel = () => {
+    this.setState({
+      areaSelectStatus:false,
+    })
+  }
 
   render(){
     const { getFieldProps } = this.props.form;
-    console.dir(getFieldProps)
+    const {areaSelectStatus} = this.state;
     return (
       <div>
 
@@ -41,26 +74,29 @@ class AddAddress extends Component{
           <InputItem
             {...getFieldProps('receivePhone',{
               rules:[
-                {required:true,message:'收件人地址不能为空'},
-              ]
+                {required:true,message:'联系人电话不能为空'},
+              ],
             }
             )}
             clear
+            type="phone"
             placeholder="请输入联系人电话"
           >联系电话</InputItem>
           <InputItem
-            {...getFieldProps('areaInfo',{
+            {...getFieldProps('area',{
               rules:[
                 {required:true,message:'所在地址不能为空'},
               ]
             })}
             clear
+            editable={false}
             placeholder="请选择所在地址"
+            onClick={()=>this.setState({areaSelectStatus:true})}
           >所在地址</InputItem>
           <InputItem
             {...getFieldProps('address',{
               rules:[
-                {required:true,message:详细地址不能为空'},
+                {required:true,message:'详细地址不能为空'},
               ]
             })}
             clear
@@ -68,7 +104,10 @@ class AddAddress extends Component{
           >详细地址</InputItem>
         </List>
         <WhiteSpace/>
-        <Button type="primary" onClick={this.handleClick}>确认并保存</Button>
+        <div className={styles.formBtn}>
+          <Button type="primary" onClick={this.handleClick}>确认并保存</Button>
+        </div>
+        <ThreeClassSelect areaSelectStatus={areaSelectStatus} selectComfig={this.selectComfig} cancel={this.selectCancel}></ThreeClassSelect>
       </div>
     )
   }
