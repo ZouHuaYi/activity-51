@@ -37,7 +37,6 @@ export function addClass(obj, sClass) {
   obj.className += ' ' + sClass;
 }
 
-// 去除class
 //去除class类名
 export function removeClass(obj, sClass) {
   var aClass = obj.className.split(' ');
@@ -49,4 +48,10 @@ export function removeClass(obj, sClass) {
       break;
     }
   }
+}
+
+// 角度换算成角度的方法
+
+export function changeAnge(value) {
+  return (Math.PI/180)*value;
 }

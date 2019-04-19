@@ -15,3 +15,23 @@ export async function addAddress({area,receivePhone,receiveName,address}) {
     }
   })
 }
+
+// 获取抽奖奖品数据的接口
+export async function getRaffleData() {
+  return request('/rest/activity/details',{
+    method:"POST",
+    body: {
+      activityId:19
+    }
+  })
+}
+
+// 抽奖接口
+export async function drawRaffle() {
+  return request('/rest/activity/user/draw/award',{
+    method:"POST",
+    body: {
+      activityId:19
+    }
+  })
+}

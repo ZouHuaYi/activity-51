@@ -6,11 +6,11 @@ function DiscBox(props) {
 
   return(
     <div>
-      <div className={styles.circle}>
+      {/*<div className={styles.circle}>*/}
 
 
-        <CicleArch/>
-      </div>
+        {/*<CicleArch/>*/}
+      {/*</div>*/}
       <CicleCanvas></CicleCanvas>
     </div>
   )
