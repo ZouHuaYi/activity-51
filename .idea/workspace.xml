@@ -213,8 +213,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/Raffle/CicleCanvas.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="46" column="31" lean-forward="true" selection-start-line="46" selection-start-column="31" selection-end-line="46" selection-end-column="31" />
+            <state relative-caret-position="544">
+              <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -534,12 +534,12 @@
       <workItem from="1555377979323" duration="444000" />
       <workItem from="1555400283575" duration="8805000" />
       <workItem from="1555462862356" duration="26905000" />
-      <workItem from="1555549176143" duration="25915000" />
+      <workItem from="1555549176143" duration="26222000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="126282000" />
+    <option name="totallyTimeSpent" value="126589000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -892,8 +892,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Raffle/CicleCanvas.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="46" column="31" lean-forward="true" selection-start-line="46" selection-start-column="31" selection-end-line="46" selection-end-column="31" />
+        <state relative-caret-position="544">
+          <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
