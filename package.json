@@ -42,7 +42,7 @@
     "umi-plugin-react": "^1.4.0"
   },
   "lint-staged": {
-   
+
   },
   "engines": {
     "node": ">=8.0.0"

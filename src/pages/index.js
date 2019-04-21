@@ -11,7 +11,7 @@ import { connect } from 'dva';
 
 @connect(({global})=>({
   global
-}),()=>{})
+}))
 
 class TodoList extends Component {
 
@@ -21,6 +21,13 @@ class TodoList extends Component {
       canvasWidth:window.innerWidth-30
     }
   }
+
+  componentDidMount(){
+    this.props.dispatch({
+      type:'global/test',
+    })
+  }
+
   startDraw = (fun) => {
       fun&&fun(1);
   }
@@ -30,7 +37,12 @@ class TodoList extends Component {
 
     const { raffleData } = this.props.global;
 
-    let imageList = raffleData.awardList;
+    let imageList = [];
+    if(raffleData){
+      (raffleData.awardList).forEach(item=>{
+        imageList.push(item.awardImg);
+      })
+    }
 
     return (
       <div>

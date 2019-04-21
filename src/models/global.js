@@ -5,9 +5,20 @@ import router from 'umi/router';
 export default {
   namespace:'global',
   state:{
-    raffleData:{}
+    raffleData:null
   },
   effects:{
+    // 测试函数
+    *test(_,{call,put}){
+      console.log('ok---ok')
+      yield put({
+        type:'andtest',
+        ok:'ok',
+      })
+    },
+    *andtest({ok},{call,put}){
+      console.log('ok'+ok)
+    },
     // 添加地址的函数
     *addAddressFun({addressInfoData},{put,call}){
       Toast.loading('正在保存',10);
@@ -24,7 +35,7 @@ export default {
     *getRaffleData({},{put,call}){
       const response = yield call(getRaffleData);
       if(response.messageCode==900){
-        put({
+       yield put({
           type: 'saveRaffleData',
           data:response.data,
         })

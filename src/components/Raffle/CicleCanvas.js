@@ -5,22 +5,16 @@ const printer = require('@/assets/printer.png');
 
 class CicleCanvas extends React.Component{
   constructor(props){
-    super(props);
+    super(props)
     this.CanavasId = React.createRef();
     this.image = new Image();
     this.image.src = require('@/assets/login_bgk.jpg');
+    console.log(props,'props')
     this.state={
       canvasWidth: props.canvasWidth,
       semiWidth: (props.canvasWidth)/2,
-      re: props.semiBaseCenter||10,
-      AngleRadius: Math.PI*2 / (props.numPiece),
-      AngleDeg: 360/(props.numPiece),
-      imgBaseBack: props.imgBaseBack || 10,
-      imgWidth: props.imgWidth || 100,
-      imgHeight: props.imgHeight || 50,
-      colors: props.colors || [],     //["#AE3EFF","#4D3FFF","#FC262C","#3A8BFF","#EE7602","#FE339F","#3A8BFF","#4D3FFF","#EE7602","#FE339F"],
+      //["#AE3EFF","#4D3FFF","#FC262C","#3A8BFF","#EE7602","#FE339F","#3A8BFF","#4D3FFF","#EE7602","#FE339F"],
       rotateDeg: 0,
-      imageList: props.imageList || [],
       imageLoadArr: [],
       allCircle: props.allCircle || 12,
     }
@@ -28,11 +22,25 @@ class CicleCanvas extends React.Component{
 
   // 更新
   componentWillReceiveProps(nextProps){
-    console.log('-0-0-')
+    if(nextProps.imageList.length>0||nextProps.numPiece>0){
+      this.setState({
+        semiBaseCenter: nextProps.semiBaseCenter||10,
+        AngleRadius: Math.PI*2 / (nextProps.numPiece),
+        AngleDeg: 360/(nextProps.numPiece),
+        imgBaseBack: nextProps.imgBaseBack || 10,
+        imgWidth: nextProps.imgWidth || 100,
+        imgHeight: nextProps.imgHeight || 50,
+        colors: nextProps.colors || ["#AE3EFF","#4D3FFF","#FC262C","#3A8BFF","#EE7602","#FE339F","#3A8BFF","#4D3FFF","#EE7602","#FE339F"],
+        imageList: nextProps.imageList || [],
+      },()=>{
+        this.loadAllImg();
+      })
+
+    }
   }
 
   componentDidMount () {
-    this.loadAllImg();
+    // this.loadAllImg();
   }
 
   // 中奖角度换算
@@ -45,10 +53,14 @@ class CicleCanvas extends React.Component{
   loadAllImg = () => {
     let promiseAll = [];
     let img = [];
+
+    console.log(this.state.imageList);
+
       for(let i=0,len=this.state.imageList.length;i<len;i++){
         promiseAll[i] = new Promise((resolve,reject)=>{
           img[i] = new Image();
           img[i].src = this.state.imageList[i];
+          console.log(img[i])
           img[i].onload  = () =>{
             resolve(img[i]);
           }
@@ -62,6 +74,7 @@ class CicleCanvas extends React.Component{
       this.setState({
         imageLoadArr:res
       },()=>{
+        console.log(res)
           // 图片加载完成 执行话canvas的动作
         this.ctx = this.CanavasId.current.getContext('2d');
         for (let i=0;i<this.props.numPiece;i++){
@@ -77,7 +90,7 @@ class CicleCanvas extends React.Component{
   rotationHandle = (index) => {
     let angle = 0;
     let step = 0;
-    let endDeg = this.matrixingAngle(0);
+    let endDeg = this.matrixingAngle(1);
     let slowDown = 1000;
     clearInterval(this.t);
     this.t = setInterval(()=>{
