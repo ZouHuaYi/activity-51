@@ -1,0 +1,9 @@
+.bodyHours{
+  margin: 0 auto;
+  /*background: #17F2B2;*/
+  border-radius: 50% 50%;
+}
+.bodyHours canvas{
+  display: block;
+  border-radius: 50% 50%;
+}

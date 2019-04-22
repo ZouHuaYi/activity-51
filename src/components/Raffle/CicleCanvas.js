@@ -7,13 +7,9 @@ class CicleCanvas extends React.Component{
   constructor(props){
     super(props)
     this.CanavasId = React.createRef();
-    this.image = new Image();
-    this.image.src = require('@/assets/login_bgk.jpg');
-    console.log(props,'props')
     this.state={
       canvasWidth: props.canvasWidth,
       semiWidth: (props.canvasWidth)/2,
-      //["#AE3EFF","#4D3FFF","#FC262C","#3A8BFF","#EE7602","#FE339F","#3A8BFF","#4D3FFF","#EE7602","#FE339F"],
       rotateDeg: 0,
       imageLoadArr: [],
       allCircle: props.allCircle || 12,
@@ -32,10 +28,11 @@ class CicleCanvas extends React.Component{
         imgHeight: nextProps.imgHeight || 50,
         colors: nextProps.colors || ["#AE3EFF","#4D3FFF","#FC262C","#3A8BFF","#EE7602","#FE339F","#3A8BFF","#4D3FFF","#EE7602","#FE339F"],
         imageList: nextProps.imageList || [],
+        printerImg: nextProps.printerImg || printer,
+        printerMarginTop:nextProps.printerMarginTop || 0,
       },()=>{
         this.loadAllImg();
       })
-
     }
   }
 
@@ -53,14 +50,10 @@ class CicleCanvas extends React.Component{
   loadAllImg = () => {
     let promiseAll = [];
     let img = [];
-
-    console.log(this.state.imageList);
-
       for(let i=0,len=this.state.imageList.length;i<len;i++){
         promiseAll[i] = new Promise((resolve,reject)=>{
           img[i] = new Image();
           img[i].src = this.state.imageList[i];
-          console.log(img[i])
           img[i].onload  = () =>{
             resolve(img[i]);
           }
@@ -74,7 +67,6 @@ class CicleCanvas extends React.Component{
       this.setState({
         imageLoadArr:res
       },()=>{
-        console.log(res)
           // 图片加载完成 执行话canvas的动作
         this.ctx = this.CanavasId.current.getContext('2d');
         for (let i=0;i<this.props.numPiece;i++){
@@ -90,7 +82,7 @@ class CicleCanvas extends React.Component{
   rotationHandle = (index) => {
     let angle = 0;
     let step = 0;
-    let endDeg = this.matrixingAngle(1);
+    let endDeg = this.matrixingAngle(index);
     let slowDown = 1000;
     clearInterval(this.t);
     this.t = setInterval(()=>{
@@ -114,7 +106,9 @@ class CicleCanvas extends React.Component{
 
   // 点击抽奖按钮
   startPraise = () => {
-    this.rotationHandle();
+    this.props.startPraise(index=>{
+      this.rotationHandle(index);
+    });
   }
 
   // 画扇形的函数
@@ -154,7 +148,7 @@ class CicleCanvas extends React.Component{
   }
 
   render(){
-    const { canvasWidth } = this.state;
+    const { canvasWidth,printerImg ,printerMarginTop } = this.state;
     return(
       <div className={styles.canvasBox} style={{width:canvasWidth+'px'}}>
         <div className={styles.canvasConent} style={{transform:`rotate(${this.state.rotateDeg}deg)`}}>
@@ -165,7 +159,7 @@ class CicleCanvas extends React.Component{
           >
           </canvas>
         </div>
-        <img className={styles.printer} src={printer} alt="" onClick={this.startPraise} />
+        <img className={styles.printer}  style={{marginTop:printerMarginTop+'px'}} src={printerImg} alt="" onClick={this.startPraise} />
       </div>
     )
   }

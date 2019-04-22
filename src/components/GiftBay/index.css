@@ -1,0 +1,13 @@
+.giftBag{
+  width: 100%;
+  position: relative;
+}
+.giftBag .giftTopImg{
+  display: block;
+  width: 100%;
+}
+.giftBanner{
+  width: 100%;
+  position: absolute;
+  z-index: -1;
+}

@@ -51,7 +51,55 @@ export function removeClass(obj, sClass) {
 }
 
 // 角度换算成角度的方法
-
 export function changeAnge(value) {
   return (Math.PI/180)*value;
 }
+
+// 时间格式化的写法
+export function formatTime (fmt,time) {
+  let timer = new Date(time*1000);
+  let o = {
+    "M+": timer.getMonth() + 1,    //月份
+    "d+": timer.getDate(),         //日
+    "H+": timer.getHours(),        //小时
+    "m+": timer.getMinutes(),      //分
+    "s+": timer.getSeconds(),      //秒
+    "S":  timer.getMilliseconds()  //毫秒
+  };
+  if (/(y+)/.test(fmt)){
+    fmt = fmt.replace(RegExp.$1, (timer.getFullYear() + "").substr(4 - RegExp.$1.length));
+  }
+  for (var k in o){
+    if (new RegExp("(" + k + ")").test(fmt)) {
+      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    }
+  }
+  return fmt;
+}
+
+// 倒计时转化
+export function counterTime(fmt,timestamp) {
+  const nowTime = new Date();
+  const endTime = new Date(timestamp);
+  const t = endTime.getTime()-nowTime.getTime();
+  if(t<0){
+    return -1;
+  }
+  const day = Math.floor(t/1000/60/60/24);
+  const hours = Math.floor(t/1000/60/60%24);
+  let o = {
+    "d+": day,         //日
+    "H+": hours,        //小时
+    "m+": Math.floor(t/1000/60%60),      //分
+    "s+": Math.floor(t/1000%60),      //秒
+    // "S":  timer.getMilliseconds()  //毫秒
+  };
+
+  for (var k in o){
+    if (new RegExp("(" + k + ")").test(fmt)) {
+      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    }
+  }
+  return {fmt,day,hours};
+}
+

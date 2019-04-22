@@ -1,24 +1,14 @@
-import {addAddress,getRaffleData} from '@/api/common';
+import {addAddress,getRaffleData,drawRaffle} from '@/api/common';
 import { Toast} from 'antd-mobile';
 import router from 'umi/router';
 
 export default {
   namespace:'global',
   state:{
-    raffleData:null
+    raffleData:null,
+    prizeData:{},
   },
   effects:{
-    // 测试函数
-    *test(_,{call,put}){
-      console.log('ok---ok')
-      yield put({
-        type:'andtest',
-        ok:'ok',
-      })
-    },
-    *andtest({ok},{call,put}){
-      console.log('ok'+ok)
-    },
     // 添加地址的函数
     *addAddressFun({addressInfoData},{put,call}){
       Toast.loading('正在保存',10);
@@ -34,7 +24,7 @@ export default {
     // 获取抽奖奖品的数据
     *getRaffleData({},{put,call}){
       const response = yield call(getRaffleData);
-      if(response.messageCode==900){
+      if(response.messageCode!==900){
        yield put({
           type: 'saveRaffleData',
           data:response.data,
@@ -43,12 +33,30 @@ export default {
         Toast.info(response.message?response.message:'保存失败，请重试！', 2);
       }
     },
+    // 中奖请求
+    *awardPrize(_,{put,call}){
+      const response = yield call(drawRaffle);
+      if(response.messageCode!==900){
+        yield put({
+          type: 'savePrizeData',
+          data:response,
+        })
+      }else {
+        Toast.info(response.message?response.message:'保存失败，请重试！', 2);
+      }
+    }
   },
   reducers:{
     saveRaffleData(state,action){
       return{
         ...state,
         raffleData:action.data
+      }
+    },
+    savePrizeData(state,action){
+      return{
+        ...state,
+        prizeData:action.data
       }
     }
   },
