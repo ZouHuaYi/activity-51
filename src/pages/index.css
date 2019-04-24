@@ -9,7 +9,7 @@
 .raffleBox{
   width: 100%;
   padding: 80px 0;
-  background: url("@/assets/gift_bgk.jpg")no-repeat;
+  background: url("@/assets/gift_bgk.png")no-repeat;
   background-size: 100% 100%;
 }
 .rafTitle{
@@ -32,4 +32,106 @@
   box-sizing: border-box;
   background: url("@/assets/hours.jpg")no-repeat;
   background-size: 100% 100%;
+}
+.centerMan{
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  background: #0fe2d5;
+  bottom: 120px;
+  right: 40px;
+  text-align: center;
+  border-radius: 50%;
+  z-index: 10000;
+}
+.centerMan:after,.centerMan:before{
+  position:absolute;
+  content: " ";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  z-index: 0;
+}
+.centerMan:after{
+  background: rgba(255,219,215,0.7);
+  animation: shrinkBox 2s ease-in infinite;
+}
+.centerMan:before{
+  background: rgba(255,219,215,0.7);
+  animation: shrinkBox 2s ease-in infinite;
+}
+.centerMan .goCenter{
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  border-radius: 50%;
+  background: #F7B044;
+  color: #ffffff;
+  font-size: 22px;
+  line-height: 30px;
+  box-sizing: border-box;
+  padding-top: 10px;
+}
+@keyframes shrinkBox {
+  0%{
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(1.4);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+.awardBox{
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+}
+.awardMak{
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.5);
+}
+.awardbody{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #ffffff;
+  width: 80%;
+  transform: translate(-50%,-50%);
+  padding: 80px 40px;
+  box-sizing: border-box;
+  border-radius: 20px;
+}
+.awardImg img{
+  display: block;
+  width: 50%;
+  margin: 0 auto;
+}
+.awardText{
+  width: 100%;
+  padding: 30px 0;
+  font-size: 28px;
+  text-align: center;
+  line-height: 42px;
+}
+.awardBtn{
+  display: block;
+  width: 236px;
+  margin: 0 auto;
+  padding: 20px 0px;
+  background: #fc5544;
+  text-align: center;
+  color: #ffffff;
+  font-size: 28px;
+  border-radius: 38px;
 }

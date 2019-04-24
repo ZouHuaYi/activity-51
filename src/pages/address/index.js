@@ -12,13 +12,23 @@ import ThreeClassSelect from '@/components/AreaSelect/ThreeClassSelect';
 import { connect } from 'dva';
 import {addAddress} from "@/api/common";
 
-@connect(({loading})=>({
-  addAddressLoading:loading.effects['global/addAddressFun']
+@connect(({loading,user})=>({
+  user,
+  addAddressLoading:loading.effects['user/addAddressFun']
 }))
-class AddAddress extends Component{
 
-  state={
-    areaSelectStatus:false,
+class AddAddress extends Component{
+  constructor(props){
+    super(props);
+    this.state={
+      areaSelectStatus:false,
+      address:undefined,
+    }
+    setTimeout(()=>{
+      this.setState({
+        address:props.user.defaultAddress?props.user.defaultAddress[0]:undefined
+      })
+    },200)
   }
 
   handleClick = () => {
@@ -31,7 +41,7 @@ class AddAddress extends Component{
       if(this.props.addAddressLoading) return;
       console.log(value)
       this.props.dispatch({
-        type:'global/addAddressFun',
+        type:'user/addAddressFun',
         addressInfoData:value,
       })
 
@@ -39,7 +49,6 @@ class AddAddress extends Component{
   }
 
   selectComfig = (val) => {
-    console.log(val);
     if(val.length>0){
       this.setState({
         areaSelectStatus:false,
@@ -54,25 +63,28 @@ class AddAddress extends Component{
     })
   }
 
+
   render(){
     const { getFieldProps } = this.props.form;
-    const {areaSelectStatus} = this.state;
+    const {areaSelectStatus,address} = this.state;
     return (
       <div>
-
         <List renderHeader={() => '填写收货地址'}>
           <InputItem
             {...getFieldProps('receiveName',{
+              initialValue:address?address.receiveName:address,
               rules:[
                 {required:true,message:'收货地址不能为空'},
               ]
             }
             )}
+            defaultValue={address?address.receiveName:address}
             clear
             placeholder="请输入收件人姓名"
           >收货人</InputItem>
           <InputItem
             {...getFieldProps('receivePhone',{
+              initialValue:address?address.receivePhone:address,
               rules:[
                 {required:true,message:'联系人电话不能为空'},
               ],
@@ -84,6 +96,7 @@ class AddAddress extends Component{
           >联系电话</InputItem>
           <InputItem
             {...getFieldProps('area',{
+              initialValue:address?address.area:address,
               rules:[
                 {required:true,message:'所在地址不能为空'},
               ]
@@ -95,6 +108,7 @@ class AddAddress extends Component{
           >所在地址</InputItem>
           <InputItem
             {...getFieldProps('address',{
+              initialValue:address?address.address:address,
               rules:[
                 {required:true,message:'详细地址不能为空'},
               ]

@@ -1,9 +1,14 @@
 /**
  * Created by zhy on 2019/4/10.
  */
-import {loginApi,sendCOde,improvePassword} from '@/api/login'
+import {
+  loginApi,
+  sendCOde,
+  improvePassword,
+  bindWxchatApi
+} from '@/api/login'
 import { Toast} from 'antd-mobile';
-import {setToken,getToken,setUserId,getUserId} from "@/utils/jscookie";
+import {setToken,getToken,setUserId,getUserId,getUnionId} from "@/utils/jscookie";
 import {delay} from "@/utils/utils";
 import router from 'umi/router';
 
@@ -18,7 +23,7 @@ export default{
         userInfo:{}
     },
     effects:{
-        *loginFun({phoneAndCode},{call,put}){
+        *loginFun({phoneAndCode},{call,put,select}){
             Toast.loading('正在发送',10);
             const response = yield call(loginApi,phoneAndCode);
             Toast.hide();
@@ -27,6 +32,9 @@ export default{
               setToken(response.data.token);
               setUserId(response.data.id);
               yield put({type:'saveUserInfo',data:response.data});
+              if(getUnionId()){
+                yield call(bindWxchatApi,{id:response.data.id,unionId:getUnionId()})
+              }
               router.replace('/');
             }else if(response.messageCode==129){
               // 没有密码的时候
@@ -34,6 +42,8 @@ export default{
               setUserId(response.data.id);
               yield put({type:'changePasswordStatus',status:true});
               yield put({type:'saveUserInfo',data:response.data});
+              const wechatInfo = yield select(state=>state.wechat.wechatMessage);
+              console.log(wechatInfo,'wechatInfo');
             }else {
               Toast.info(response.message?response.message:'登录失败', 2);
             }
@@ -64,6 +74,9 @@ export default{
             Toast.hide();
             if(response.messageCode==900){
               // 设置成功后 绑定 微信 绑定父级
+              if(getUnionId()){
+                yield call(bindWxchatApi,{id:getUserId(),unionId:getUnionId()})
+              }
               router.replace('/');
             }else {
               Toast.info(response.message?response.message:'密码设置失败', 2);

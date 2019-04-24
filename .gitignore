@@ -6,7 +6,7 @@
 /yarn-error.log
 /yarn.lock
 /package-lock.json
-/.idea
+
 
 # production
 /dist
@@ -17,3 +17,4 @@
 # umi
 .umi
 .umi-production
+.idea

@@ -18,7 +18,7 @@ export default {
       title: {
         defaultTitle:'美上美',
         userLocale:false,
-        format:'美上美{separator}{parent}{separator}{current}',
+        format:'{parent}{separator}{current}',
       },
       dll: false,
       routes: {
@@ -56,7 +56,8 @@ export default {
       { "libraryName": "antd-mobile", "style": "css" }
     ]
   ],
-  base:'/',
+  base:'/activity',
+  publicPath:'./',
   outputPath:'./activity',
   cssPublicPath:'./',
   exportStatic:{
@@ -65,7 +66,8 @@ export default {
   history: 'hash',
   proxy: {
     '/api': {
-      target: 'http://test.topmei3mei.com/',
+      // target: 'http://test.topmei3mei.com/',
+      target: 'http://192.168.2.236:8080/msm/',
       changeOrigin: true,
       pathRewrite: {
         '^/api': ''

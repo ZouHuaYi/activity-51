@@ -4,7 +4,10 @@ html, body, #root {
   width: 100%;
   /*touch-action: none;*/
 }
-
+*{
+  margin: 0;
+  padding: 0;
+}
 body {
   margin: 0;
 }

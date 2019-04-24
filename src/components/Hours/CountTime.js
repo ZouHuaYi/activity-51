@@ -6,15 +6,15 @@ class CoutTime extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      showStatus:false
+      showStatus:0      // 0 开始状态 1 正常执行状态 2 已经过时
     }
     this.CanavasId = React.createRef();
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.timestamp){
+    if(nextProps.timestamp && this.state.showStatus===0){
       this.setState({
-        showStatus:true
+        showStatus:1
       },()=>{
         this.loadAllImg();
       })
@@ -46,14 +46,15 @@ class CoutTime extends React.Component{
         this.drawArc(0);
 
         let gay = 0;
-        let tim = setInterval(()=>{
+        clearInterval(this.tim);
+        this.tim = setInterval(()=>{
           gay++;
           const dt = counterTime('dd天HH:mm:ss',this.props.timestamp);
           if(dt===-1){
-            clearInterval(tim);
+            clearInterval(this.tim);
             this.setState({
-              showStatus:false
-            })
+              showStatus:2
+            });
             return;
           }
 
@@ -67,6 +68,13 @@ class CoutTime extends React.Component{
     }).catch(err=>{
       console.log(err)
     })
+  }
+
+  componentWillUnmount(){
+    if (!this.tim) {
+      return;
+    }
+    clearInterval(this.tim);
   }
 
   // 主要的画图部分
@@ -157,7 +165,7 @@ class CoutTime extends React.Component{
     const {hoursWidth} = this.props;
     return (
       <div>
-      {this.state.showStatus&&
+      {this.state.showStatus===1&&
           (<div className={styles.bodyHours} style={{width:hoursWidth+'px',height:hoursWidth+'px'}}>
           <canvas ref={this.CanavasId} width={hoursWidth} height={hoursWidth}></canvas>
         </div>)

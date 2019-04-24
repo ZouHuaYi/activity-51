@@ -1,3 +1,4 @@
+import {getActivityId,getParentId} from './jscookie';
 
 // 时间延时
 export const delay = (timeout) => {
@@ -103,3 +104,8 @@ export function counterTime(fmt,timestamp) {
   return {fmt,day,hours};
 }
 
+
+export function clearPath() {
+  const url = window.location.href.split("#")[0];
+  return `${url}#/activity=${getActivityId()}&inviterId=${getParentId()}`;
+}
