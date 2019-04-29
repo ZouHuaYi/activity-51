@@ -5,7 +5,7 @@
 import fetch from 'dva/fetch';
 import { Toast,Modal } from 'antd-mobile';
 import router from 'umi/router';
-import {setToken,getToken} from './jscookie'
+import {setToken,getToken,removeToken} from './jscookie'
 
 const ROOT = process.env.NODE_ENV == 'production' ? "" : "/api";
 
@@ -27,7 +27,7 @@ const codeMessage = {
     504: '网关超时。',
 };
 
-const WHITE_API = ['/api/rest/business/user/login'];
+const WHITE_API = ['/rest/business/user/login'];
 
 // 检查返回状态码
 const checkStatus = response => {
@@ -50,7 +50,8 @@ const checkToken = response => {
         if(status===906 || status===903 || status===904){
             Modal.alert('温馨提示',data.message?data.message:'登录过期请重新登录',[
                 {text:'确认',onPress:()=>{
-                    router.push('/login');
+                    removeToken();
+                    router.replace('/login');
                 }}
             ])
             return false;
@@ -96,15 +97,15 @@ export default function request(url, option) {
         .catch(e => {
             const status = e.name;
             if (status === 403) {
-                router.push('/403');
+                router.replace('/404');
                 return;
             }
             if (status <= 504 && status >= 500) {
-                router.push('/500');
+                router.replace('/500');
                 return;
             }
             if (status >= 404 && status < 422) {
-                router.push('/404');
+                router.replace('/404');
             }
 
         });

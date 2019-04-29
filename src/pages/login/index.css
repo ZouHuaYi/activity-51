@@ -40,7 +40,7 @@
   content: " ";
   width: 100%;
   border-bottom: 2Px solid #17F2B2;
-  bottom: -1px;
+  bottom: -2Px;
   left: 0;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
   animation: lineShow 0.3s linear;

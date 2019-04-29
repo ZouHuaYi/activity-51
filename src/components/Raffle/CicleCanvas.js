@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './canvas.css';
 import PropTypes from 'prop-types';
+import { getPixelRatio } from '@/utils/utils';
 
 class CicleCanvas extends React.Component{
   constructor(props){
@@ -9,12 +10,20 @@ class CicleCanvas extends React.Component{
     this.state={
       canvasWidth: props.canvasWidth,
       rotateDeg: 0,
+      ratio:1
     }
   }
 
   componentDidMount () {
     this.props.onRef(this);
     this.ctx = this.CanavasId.current.getContext('2d');
+    const ratio = getPixelRatio(this.ctx);
+    this.CanavasId.current.style.width = this.state.canvasWidth+'px';
+    this.CanavasId.current.style.height = this.state.canvasWidth+'px';
+
+    this.setState({
+      ratio: Number(ratio),
+    })
   }
 
   // 开始加载
@@ -65,16 +74,16 @@ class CicleCanvas extends React.Component{
 
   // 画扇形的函数
   drawFanshaped = (index) => {
-    // const {colors,AngleRadius,semiWidth,semiBaseCenter} = this.state;
     const {colors,numPiece,imageList,canvasWidth,imgWidth,imgHeight,semiBaseCenter,imgBaseBack} = this.props;
-    const semiWidth = canvasWidth/2;
+    const {ratio} = this.state;
+    const semiWidth = canvasWidth/2*ratio;
     const AngleRadius = 2*Math.PI/numPiece;
 
     const angle = AngleRadius*index;
     this.ctx.beginPath();
     this.ctx.fillStyle = colors[index] || '#ffffff';
     this.ctx.arc(semiWidth,semiWidth,semiWidth,angle,angle+AngleRadius,false);
-    this.ctx.arc(semiWidth,semiWidth,(semiBaseCenter||10),angle+AngleRadius,angle,true);
+    this.ctx.arc(semiWidth,semiWidth,(semiBaseCenter||10)*ratio,angle+AngleRadius,angle,true);
     this.ctx.fill();
     this.ctx.save();
     // 写图片
@@ -84,19 +93,22 @@ class CicleCanvas extends React.Component{
     this.ctx.translate(Rx,Ry);
     this.ctx.rotate(AngleRadius*index+AngleRadius/2+Math.PI/2);
     if(imageList[index]){
-      this.ctx.drawImage(imageList[index],-imgWidth/2,(imgBaseBack||10),imgWidth,imgHeight);
+      this.ctx.drawImage(imageList[index],-imgWidth/2*ratio,(imgBaseBack||10)*ratio,imgWidth*ratio,imgHeight*ratio);
     }
     this.ctx.restore();
   }
 
   render(){
     const { canvasWidth,printerImg ,printerMarginTop } = this.props;
+    const {ratio} = this.state;
+    const wh = ratio*canvasWidth;
+
     return(
       <div className={styles.canvasBox} style={{width:canvasWidth+'px'}}>
         <div className={styles.canvasConent} style={{transform:`rotate(${this.state.rotateDeg}deg)`}}>
           <canvas
-            width={canvasWidth}
-            height={canvasWidth}
+            width={wh}
+            height={wh}
             ref={this.CanavasId}
           >
           </canvas>

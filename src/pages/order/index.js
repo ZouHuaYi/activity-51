@@ -3,7 +3,8 @@ import {
   List,
   Stepper,
   Button,
-  Toast
+  Toast,
+  WhiteSpace
 } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import styles from './index.css';
@@ -77,9 +78,11 @@ class BasicInput extends React.Component {
             return (
               <div key={item.productOrPackageId}>
                 <List renderHeader={() => item.productEntity.title} className="my-list">
+                  <WhiteSpace size='lg'/>
                   <Item className={styles.orderImg} align="top" thumb={item.productEntity.thumbnail} multipleLine >
                     {item.productEntity.shortTitle} <Brief>{item.productEntity.subtitle}</Brief>
                   </Item>
+                  <WhiteSpace size='lg'/>
                 </List>
                 <List>
                   <Item

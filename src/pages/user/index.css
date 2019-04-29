@@ -124,7 +124,7 @@
   width: 100%;
   position: relative;
   height: 100px;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 .itemLine{
   width: 100%;
@@ -172,9 +172,7 @@
   border-top: 1px solid #e6e6e6;
   border-bottom: 1px solid #e6e6e6;
   line-height: 100px;
-}
-.personImg{
-  float: left;
+  position: relative;
 }
 .personImg img{
   vertical-align: middle;
@@ -184,13 +182,15 @@
   border: 2Px solid #ffffff;
 }
 .personImg img{
-  margin-left: -16px;
+  margin-left: -25px;
 }
 .personImg img:first-child{
   margin-left: 0px;
 }
 .numPerson{
-  float: right;
+  position: absolute;
+  right: 0;
+  top: 0;
   font-size: 22px;
 }
 .btn{
@@ -218,4 +218,43 @@
 }
 .btn a.active{
   background: linear-gradient(to bottom,#ff8478,#fc5343);
+}
+.imgOut{
+  display: inline-block;
+  line-height: 10px;
+  padding-top: 60px;
+  padding-left: 10px;
+  vertical-align: top;
+}
+.shareImg{
+  position: fixed;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0,0,0,.8);
+}
+.shareImg img{
+  display: block;
+  width: 100%;
+}
+.buyMak{
+  width: 100%;
+}
+.makImg{
+  width: 60%;
+  margin: 0 auto;
+}
+.makImg img{
+  display: block;
+  width: 100%;
+}
+.buyText{
+  width: 100%;
+  text-align: center;
+  padding: 10px 0 30px;
+  font-size: 40px;
+  color: #999999;
+  font-style: oblique;
 }

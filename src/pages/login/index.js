@@ -26,7 +26,6 @@ const logo = require('@/assets/ic_logo.png');
         onStatusIndex:-1,
       }
       this.inputPhone = React.createRef();
-
     }
 
     componentDidMount(){
@@ -91,14 +90,14 @@ const logo = require('@/assets/ic_logo.png');
     }
 
     handleLogin = ()=>{
-      const {phone,code} = this.state;
+      const {phone,code,password} = this.state;
       const {loginLoading,dispatch,login} = this.props;
       if(loginLoading) return;
       if(login.passwordStatus){
         if(!this.verifyFormFun('phone,code,password')) return;
         dispatch({
           type:'login/improvePasswordFun',
-          password:{}
+          password:{password}
         })
       }else {
         if(!this.verifyFormFun('phone,code')) return;
@@ -176,7 +175,9 @@ const logo = require('@/assets/ic_logo.png');
                         </CSSTransition>
                         <div className={styles.tips}>
                             <span>温馨提示：未注册美上美App账号的手机号，登录时将会自动注册，且代表您已同意</span>
-                            <a className={styles.vip} href="">《用户注册协议》</a>
+                            <a className={styles.vip} onClick={()=>{
+                              window.location.href = 'https://admin.topmei3mei.com/wxchat/agreement.html'
+                            }}>《用户注册协议》</a>
                         </div>
                     </div>
                     <a className={styles.sigin} href="javascript:;" onClick={this.handleLogin}>登录</a>

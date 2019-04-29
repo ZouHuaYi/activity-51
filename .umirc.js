@@ -5,7 +5,7 @@
 // const path = require('path');
 
 export default {
-  treeShaking: true,
+  // treeShaking: true,
   "lessLoaderOptions": {
     "javascriptEnabled": true
   },
@@ -60,14 +60,14 @@ export default {
   publicPath:'./',
   outputPath:'./activity',
   cssPublicPath:'./',
-  exportStatic:{
-    dynamicRoot:false
-  },
+  // exportStatic:{
+  //   dynamicRoot:false
+  // },
   history: 'hash',
   proxy: {
     '/api': {
-      // target: 'http://test.topmei3mei.com/',
-      target: 'http://192.168.2.236:8080/msm/',
+      target: 'http://test.topmei3mei.com/',
+      // target: 'http://192.168.2.236:8080/msm/',
       changeOrigin: true,
       pathRewrite: {
         '^/api': ''

@@ -2,7 +2,7 @@
  * Created by zhy on 2019/4/10.
  */
 import request from '@/utils/request';
-import {getActivityId,getParentId,getOpenId} from '@/utils/jscookie';
+import {getActivityId,getParentId,getOpenId,getHospitalId} from '@/utils/jscookie';
 
 
 // 验证码登录
@@ -11,8 +11,8 @@ export async function loginApi(params) {
         method:"POST",
         body:{
            ...params,
-          activityId:getActivityId(),
-          inviterId:getParentId(),
+          activityId:getActivityId()||'',
+          inviterId:getParentId()||'',
         }
     })
 }
@@ -36,6 +36,17 @@ export async function improvePassword({password}) {
     body:{
       password:password,
       openid:getOpenId(),
+    }
+  })
+}
+
+// 绑定活动套餐
+export async function bindActivityParent() {
+  return request('/rest/team/bind/token',{
+    method:'POST',
+    body:{
+      pId:getParentId()||'',
+      hospitalId:getHospitalId()||'',
     }
   })
 }

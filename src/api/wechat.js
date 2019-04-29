@@ -11,7 +11,7 @@ export async function signShare() {
 }
 
 // 微信绑定用户
-export async function bindWxchatApi({unionId,id}) {
+export async function bindWechatApi({unionId,id}) {
   return request('/rest/user/open_bind_unbundled',{
     method:'POST',
     body:{

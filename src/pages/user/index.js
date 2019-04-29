@@ -9,14 +9,15 @@ const header = require('@/assets/header_ok.jpg');
 import router from 'umi/router';
 import {WhiteSpace} from 'antd-mobile';
 import {connect} from 'dva';
+const shareImg = require('@/assets/share.png');
 
 @connect(({user})=>({
   user,
 }))
 class User extends React.Component{
-
-
-
+  state = {
+   shareStatus:false
+  }
   componentDidMount(){
     this.props.dispatch({
       type:'user/getUserCenterData'
@@ -82,13 +83,17 @@ class User extends React.Component{
           <WhiteSpace size='lg'/>
           <div className={styles.person}>
             <div className={styles.personImg}>
-              {rewardData.inviteAvatarList&&rewardData.inviteAvatarList.length>0&&
-              rewardData.inviteAvatarList.map((item,key)=>{
-                return (
-                  <img key={key} src={item} alt=""/>
-                )
-              })
+              {
+                rewardData.inviteAvatarList&&rewardData.inviteAvatarList.length>0&&
+                rewardData.inviteAvatarList.map((item,key)=>{
+                  if(key<=5){
+                    return (
+                      <img key={key} src={item} alt=""/>
+                    )
+                  }
+                })
               }
+              { rewardData.inviteAvatarList&&rewardData.inviteAvatarList.length>5&&(<span className={styles.imgOut}>...</span>) }
             </div>
             <div className={styles.numPerson}>
               已邀请{rewardData.userInviteCount}人
@@ -97,9 +102,38 @@ class User extends React.Component{
           <WhiteSpace size='lg'/>
           <WhiteSpace size='sm'/>
           <div className={styles.btn}>
-            <a className={styles.btnShare} href="javascript:;">邀请好友</a>
+            <a className={styles.btnShare} href="javascript:;" onClick={()=>{
+              this.setState({
+                shareStatus:true
+              })
+            }}>邀请好友</a>
             <a className={styles.btnShop+' '+ (divisor>0?styles.active:'')} onClick={this.goToOrder.bind(this,intNumber)} href="javascript:;">提货</a>
           </div>
+          {
+            this.state.shareStatus&&(
+              <div onClick={()=>{
+                this.setState({
+                  shareStatus:false
+                })
+              }} className={styles.shareImg}>
+                <img src={shareImg} alt=""/>
+              </div>
+            )
+          }
+          <WhiteSpace size='lg'/>
+          {
+            rewardData.appletPackageBuyUrl&&(
+              <div className={styles.buyMak}>
+                <div className={styles.buyText}>
+                  长按小程序码购买精美面膜
+                </div>
+                <div className={styles.makImg}>
+                  <img src={rewardData.appletPackageBuyUrl} alt=""/>
+                </div>
+              </div>
+            )
+          }
+
         </div>
       </div>
     )

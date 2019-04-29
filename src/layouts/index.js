@@ -3,7 +3,7 @@ import withRouter from 'umi/withRouter';
 import { TransitionGroup,CSSTransition } from 'react-transition-group';
 import React from 'react';
 import {browerType, getQueryString} from "@/utils/utils";
-import {setActivityId,setParentId} from '@/utils/jscookie';
+import {setActivityId,setParentId,setHospitalId} from '@/utils/jscookie';
 import {Modal} from 'antd-mobile';
 
 class BasicLayout extends React.Component {
@@ -18,10 +18,6 @@ class BasicLayout extends React.Component {
           type:'wechat/getUnionId',
           code:{code}
         })
-      }else {
-        const appid = 'wx594f420067cba83d';
-        const backUrl = encodeURIComponent(window.location.href);
-        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
       }
     }
     const activity = getQueryString('activity');
@@ -33,17 +29,22 @@ class BasicLayout extends React.Component {
       ])
       return;
     }
-    const inviterId = getQueryString('inviter');
+    const inviterId = getQueryString('inviterId');
     if(inviterId){
       setParentId(inviterId);
+    }
+    const hospital = getQueryString('hospitalId');
+    if (hospital){
+      setHospitalId(hospital);
     }
   }
 
   render(){
     const {location,children} = this.props;
+    window.scrollTo(0,0);
     return(
           <TransitionGroup>
-            <CSSTransition key={location.pathname} classNames="fade" timeout={500}>
+            <CSSTransition key={location.pathname} classNames="fade" timeout={200}>
               {
                 location.pathname==='/login'?
                   (<div className={styles.loginbox}>

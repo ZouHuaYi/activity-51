@@ -1,4 +1,13 @@
-<!DOCTYPE html><html><head><link rel="stylesheet" href="./umi.css"><meta charset="utf-8"><title>美上美App</title><script>window.routerBase = "/activity";</script></head><body><script>function goToWechatGetCode(){
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>美上美App</title>
+</head>
+<body>
+<script>
+
+function goToWechatGetCode(){
   var ua = navigator.userAgent.toLowerCase();
   if(/MicroMessenger/i.test(ua)){
      var code = window.location.href.match(new RegExp("[?&]" + 'code' + "=([^#?&]+)", "i")) ? decodeURIComponent(RegExp.$1) : "";
@@ -9,4 +18,10 @@
        }
   }
 }
-goToWechatGetCode();</script><div id="root"></div><script src="./umi.js"></script></body></html>
+goToWechatGetCode();
+
+
+</script>
+  <div id="root"></div>
+</body>
+</html>

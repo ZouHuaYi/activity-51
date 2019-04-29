@@ -58,7 +58,7 @@ export async function poolProductList() {
 
 // 获取用默认地址
 export async function getDefaultAddress() {
-  return request('rest/address/get_default',{
+  return request('/rest/address/get_default',{
     method:'POST',
     body:{
       userId:getUserId(),
@@ -69,7 +69,7 @@ export async function getDefaultAddress() {
 
 // 设置默认地址的api
 export async function setDefaultAddress(params) {
-  return request('rest/address/set_default',{
+  return request('/rest/address/set_default',{
     method:'POST',
     body:{
       userId:getUserId(),

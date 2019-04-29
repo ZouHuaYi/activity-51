@@ -63,8 +63,6 @@ export default {
       Toast.hide();
       if(response.messageCode==900){
         // 下单成功
-
-
         Toast.info('提货成功', 2);
         setTimeout(()=>{
           router.goBack();

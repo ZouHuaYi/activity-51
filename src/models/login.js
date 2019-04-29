@@ -5,8 +5,9 @@ import {
   loginApi,
   sendCOde,
   improvePassword,
-  bindWxchatApi
-} from '@/api/login'
+  bindActivityParent,
+} from '@/api/login';
+import { bindWechatApi } from '@/api/wechat';
 import { Toast} from 'antd-mobile';
 import {setToken,getToken,setUserId,getUserId,getUnionId} from "@/utils/jscookie";
 import {delay} from "@/utils/utils";
@@ -32,10 +33,15 @@ export default{
               setToken(response.data.token);
               setUserId(response.data.id);
               yield put({type:'saveUserInfo',data:response.data});
-              if(getUnionId()){
-                yield call(bindWxchatApi,{id:response.data.id,unionId:getUnionId()})
+              try {
+                if(getUnionId()){
+                  yield call(bindWechatApi,{id:response.data.id,unionId:getUnionId()})
+                }
+              }catch (e) {
+                Toast.info('微信绑定失败', 2);
+              }finally {
+                router.replace('/');
               }
-              router.replace('/');
             }else if(response.messageCode==129){
               // 没有密码的时候
               setToken(response.data.token);
@@ -43,7 +49,6 @@ export default{
               yield put({type:'changePasswordStatus',status:true});
               yield put({type:'saveUserInfo',data:response.data});
               const wechatInfo = yield select(state=>state.wechat.wechatMessage);
-              console.log(wechatInfo,'wechatInfo');
             }else {
               Toast.info(response.message?response.message:'登录失败', 2);
             }
@@ -74,10 +79,21 @@ export default{
             Toast.hide();
             if(response.messageCode==900){
               // 设置成功后 绑定 微信 绑定父级
-              if(getUnionId()){
-                yield call(bindWxchatApi,{id:getUserId(),unionId:getUnionId()})
+              yield call(bindActivityParent);
+              try {
+
+              }catch (e) {
+              }finally {
+                try {
+                  if(getUnionId()){
+                    yield call(bindWechatApi,{id:getUserId(),unionId:getUnionId()});
+                  }
+                }catch (e) {
+
+                }finally {
+                  router.replace('/');
+                }
               }
-              router.replace('/');
             }else {
               Toast.info(response.message?response.message:'密码设置失败', 2);
             }

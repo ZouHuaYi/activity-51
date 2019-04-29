@@ -11,7 +11,9 @@ export default {
   effects:{
     // 获取抽奖奖品的数据
     *getRaffleData({callback},{put,call}){
+      Toast.loading('正在加载',20);
       const response = yield call(getRaffleData);
+      Toast.hide();
       if(response.messageCode!==900){
        yield put({
           type: 'saveRaffleData',
@@ -37,14 +39,11 @@ export default {
             return;
           }
         })
-
       }else {
-
-        Modal.alert('温馨提示',response.message?response.message:'你已经抽过奖了。',[
+        Modal.alert('温馨提示',response.message||'你已经抽过奖啦！',[
           {text:'取消',onPress:()=>{}},
           {text:'确定',onPress:()=>{}}
         ])
-
       }
     }
   },

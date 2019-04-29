@@ -30,11 +30,12 @@ class TodoList extends Component {
     this.state = {
       canvasWidth:window.innerWidth-30,
       endPrizeStatus:false,
+      endPrizeClick:false,
       canavsConfig:{
         canvasWidth:window.innerWidth-30,
         allCircle:12,
-        imgWidth:100,
-        imgHeight:100,
+        imgWidth:120,
+        imgHeight:120,
         imgBaseBack:-10,
         printerImg:printer,
         printerMarginTop:-10
@@ -48,7 +49,6 @@ class TodoList extends Component {
       callback:()=>{
         // 这里执行获取数据成功后的函数
         this.awardConfig();
-
       }
     })
   }
@@ -64,7 +64,6 @@ class TodoList extends Component {
       return;
     }
     router.push('/user');
-
   }
 
   // 抽奖组件的配置完成函数
@@ -111,6 +110,7 @@ class TodoList extends Component {
 
   startPraise = (callback) => {
     if(this.props.prizeLoading===true) return;
+    if(this.state.endPrizeClick) return;
     if(!getToken()){
       Modal.alert('温馨提示','请先登录,再抽奖',[
         {text:'取消',onPress:()=>{}},
@@ -120,14 +120,18 @@ class TodoList extends Component {
       ])
       return;
     }
-    // const {raffleData,prizeData} = this.props.global;
 
+    // const {raffleData,prizeData} = this.props.global;
     this.props.dispatch({
       type: 'global/awardPrize',
       callback: (index)=>{
+        this.setState({
+          endPrizeClick:true
+        })
         this.cirCanvas.rotationHandle(index);
       }
     });
+
   }
 
   // 调用抽奖组件的方法
@@ -137,13 +141,12 @@ class TodoList extends Component {
 
   prizeEnd = () =>{
     // 抽奖结束的动作
-    console.log('游戏结束');
-    this.setState({
-      endPrizeStatus:true,
-    })
-
-
-
+    setTimeout(()=>{
+      this.setState({
+        endPrizeStatus:true,
+        endPrizeClick:false
+      })
+    },1000);
   }
 
 
@@ -154,16 +157,21 @@ class TodoList extends Component {
     let bannerList = [];
     let ruleImgSet = [];
     if(raffleData){
-      expandContent = JSON.parse(raffleData.expandContent);
-      bannerList = raffleData.bannerList.map(item=>{
-        return item.banner;
-      })
-      ruleImgSet = raffleData.ruleImgSet.map(item=>{
-        return item;
-      });
+      try {
+        expandContent = JSON.parse(raffleData.expandContent);
+      }catch (e) { }
+      try {
+        bannerList = raffleData.bannerList
+      }catch (e) {}
+      try {
+        ruleImgSet = raffleData.ruleImgSet.map(item=>{
+          return item;
+        });
+      }catch (e) {}
+
     }
     return (
-      <div>
+      <div style={{background:'#9C0004'}}>
         {
           raffleData&&raffleData.descriptionImgSet&&
           <div className={styles.headerBanner}>
@@ -176,12 +184,18 @@ class TodoList extends Component {
             topImg={expandContent.maskImg}
           />
         }
-
+        {expandContent.storyUrl&&
+          (
+            <div style={{width:'100%'}}>
+              <img style={{display:'block',width:'100%'}} src={expandContent.storyUrl} alt=""/>
+            </div>
+          )
+        }
         <Banner
           bannerList={bannerList}
           imgHeight={'auto'}
           dots={true}
-          dotStyle={{background:'#8880a1'}}
+          dotStyle={{background:'rgba(255,255,255,0.5)'}}
           dotActiveStyle={{background:'#ffffff'}}
         />
         <div className={styles.hours} >
@@ -190,15 +204,17 @@ class TodoList extends Component {
             timestamp={expandContent.countdown}
           />
         </div>
-        <Banner
-          bannerList={ruleImgSet}
-          imgHeight={'auto'}
-          dots={false}
-        />
+        {
+          ruleImgSet[0]&&(
+            <div className={styles.bannerOver}>
+              <img src={ruleImgSet[0]} alt=""/>
+            </div>
+          )
+        }
         <div className={styles.raffleBox}>
           <div className={styles.rafTitle}>
             <h3>抽奖赢豪礼</h3>
-            <h3>精美面膜等你拿</h3>
+            <h3>现金/面膜/礼品</h3>
           </div>
           <CicleCanvas
             onRef={this.onCanvas}
@@ -228,7 +244,12 @@ class TodoList extends Component {
             </div>
           )
         }
-
+        {expandContent.girlUrl&&(
+          <div style={{width:'100%'}}>
+            <img style={{display:'block',width:'100%'}} src={expandContent.girlUrl} alt=""/>
+          </div>
+        )
+        }
       </div>
     );
   }

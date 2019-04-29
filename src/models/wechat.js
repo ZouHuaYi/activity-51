@@ -21,12 +21,13 @@ export default {
            // 用户绑定了微信
            setToken(response.data.token);
            setUserId(response.data.user.id);
-         }else {
-           // 用户未绑定的时候需要登录保存 unionid
-           setUnionId(response.data.unionid);
-           setOpenId(response.data.openid);
          }
+        setUnionId(response.data.unionid);
+        setOpenId(response.data.openid);
       }
+      yield put({
+        type:'signHandle'
+      })
     },
     //
     // 获取签名然后分享出去
@@ -58,9 +59,9 @@ export default {
         ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
       });
       wx.ready(() => {
-        const imgurl = window.location.protocol +"//" +document.domain +"/static/img/logo.png";
-        const title = '快来参加活动抽奖领取面膜';
-        const desc = "美上美你美丽的财富，你身边美丽管家.";
+        const imgurl = window.location.protocol +"//" +document.domain +"/activity/sharelogo.jpg?t="+Math.random();
+        const title = '火得一塌糊涂的艺术家同款面膜免费领，限时8天，多一秒无！！！';
+        const desc = 'hi，girl西班牙艺术家同款玻尿酸面膜!\n全球首款艺术面膜上市抢首发，这次给你一款装饰公寓的面膜，一个旅途路上的伴侣及拿得出手的精致礼物。';
         wx.onMenuShareTimeline({
           title: title, // 分享标题
           desc: desc, // 分享描述

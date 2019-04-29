@@ -1,4 +1,4 @@
-import {getActivityId,getParentId} from './jscookie';
+import {getActivityId,getParentId,getUserId,getHospitalId} from './jscookie';
 
 // 时间延时
 export const delay = (timeout) => {
@@ -104,8 +104,22 @@ export function counterTime(fmt,timestamp) {
   return {fmt,day,hours};
 }
 
-
+// 清空分享链接的函数
 export function clearPath() {
-  const url = window.location.href.split("#")[0];
-  return `${url}#/activity=${getActivityId()}&inviterId=${getParentId()}`;
+  const pathName = new URL(''+window.location.href);
+  return `${pathName.origin}${pathName.pathname}?inviterId=${getUserId()||getParentId()}&hospitalId=${getHospitalId()}&activity=${getActivityId()}`;
 }
+
+// 画布的像素比的获取
+export function getPixelRatio (context) {
+  const backingStore = context.backingStorePixelRatio ||
+    context.webkitBackingStorePixelRatio ||
+    context.mozBackingStorePixelRatio ||
+    context.msBackingStorePixelRatio ||
+    context.oBackingStorePixelRatio ||
+    context.backingStorePixelRatio || 1;
+  return (window.devicePixelRatio || 1) / backingStore;
+}
+
+
+
