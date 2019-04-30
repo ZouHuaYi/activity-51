@@ -6,6 +6,7 @@ export default {
   state:{
     outHtml:'',
     outMp4:'',
+    playMusicStatus:false,
   },
   effects:{
     *actionSaveHtml({html},{put}){
@@ -20,7 +21,6 @@ export default {
       });
     },
     *actionSaveMp4({mp4},{put}){
-
       yield put({
         type:'saveOutMp4',
         mp4:mp4
@@ -30,9 +30,21 @@ export default {
         query:'mp4',
         pathname:'/link'
       });
+    },
+    *changePlayStatus({status},{put}){
+      yield put({
+        type:'savePlayStatus',
+        status:status,
+      })
     }
   },
   reducers:{
+    savePlayStatus(state,action){
+      return{
+        ...state,
+        playMusicStatus:action.status
+      }
+    },
     saveOutHtml(state,action){
       return{
         ...state,

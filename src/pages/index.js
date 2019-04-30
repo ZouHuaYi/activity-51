@@ -14,6 +14,9 @@ import Hours from '@/components/Hours/CountTime'
 import router from 'umi/router';
 import { connect } from 'dva';
 import {Link} from 'umi';
+import Music from '@/components/Music/Music';
+
+
 const printer = require('@/assets/click_gift.png');
 const headerOk = require('@/assets/header_ok.jpg');
 const giftBay = require('@/assets/sale.png');
@@ -28,11 +31,11 @@ class TodoList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      canvasWidth:window.innerWidth-30,
+      canvasWidth:window.innerWidth-40,
       endPrizeStatus:false,
       endPrizeClick:false,
       canavsConfig:{
-        canvasWidth:window.innerWidth-30,
+        canvasWidth:window.innerWidth-15,
         allCircle:12,
         imgWidth:120,
         imgHeight:120,
@@ -173,6 +176,10 @@ class TodoList extends Component {
     return (
       <div style={{background:'#9C0004'}}>
         {
+          expandContent.musicUrl&&(<Music src={expandContent.musicUrl}/>)
+        }
+
+        {
           raffleData&&raffleData.descriptionImgSet&&
           <div className={styles.headerBanner}>
             <img src={raffleData.descriptionImgSet[0]} alt=""/>
@@ -198,12 +205,10 @@ class TodoList extends Component {
           dotStyle={{background:'rgba(255,255,255,0.5)'}}
           dotActiveStyle={{background:'#ffffff'}}
         />
-        <div className={styles.hours} >
-          <Hours
-            hoursWidth={this.state.canvasWidth}
-            timestamp={expandContent.countdown}
-          />
-        </div>
+        <Hours
+          hoursWidth={this.state.canvasWidth}
+          timestamp={expandContent.countdown}
+        />
         {
           ruleImgSet[0]&&(
             <div className={styles.bannerOver}>
@@ -214,7 +219,7 @@ class TodoList extends Component {
         <div className={styles.raffleBox}>
           <div className={styles.rafTitle}>
             <h3>抽奖赢豪礼</h3>
-            <h3>现金/面膜/礼品</h3>
+            <h3>百分百中奖</h3>
           </div>
           <CicleCanvas
             onRef={this.onCanvas}

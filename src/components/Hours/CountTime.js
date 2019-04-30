@@ -69,10 +69,10 @@ class CoutTime extends React.Component{
           }
 
           this.drawArc(gay*Math.PI/30,dt);
-          if(gay>59){
+          if(gay>119){
             gay=0;
           }
-        },1000);
+        },500);
 
       })
     }).catch(err=>{
@@ -104,27 +104,27 @@ class CoutTime extends React.Component{
       const x = imgRad*Math.cos(angle)+hoursWidth/2;
       const y = imgRad*Math.sin(angle)+hoursWidth/2;
       ctx.translate( x,y);
-      ctx.drawImage(this.state.imageLoadArr[length-i-1],-16*ratio,-12*ratio,32*ratio,24*ratio);
+      ctx.drawImage(this.state.imageLoadArr[length-i-1],-16*ratio,-12*ratio,33.6*ratio,18*ratio);
       ctx.restore();
     }
 
     // 写距离活动结束
     ctx.save();
     ctx.fillStyle = '#fff';
-    let f1 = 26*ratio;
-    ctx.font = `${f1}px Microsoft YaHei`;
+    let f1 = 22*ratio;
+    ctx.font = `normal normal 400 ${f1}px Microsoft YaHei`;
     ctx.translate(hoursWidth/2,hoursWidth/2);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('距离面膜发布',0,-30*ratio);
+    ctx.fillText('距离面膜上市',0,-30*ratio);
     ctx.restore();
 
     if(dt){
       // 写倒计时
       ctx.save();
       ctx.fillStyle = '#fff';
-      let f2 = 32*ratio;
-      ctx.font = `${f2}px Microsoft YaHei`;
+      let f2 = 30*ratio;
+      ctx.font = `normal normal 400 ${f2}px Microsoft YaHei`;
       ctx.translate(hoursWidth/2,hoursWidth/2);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -140,7 +140,7 @@ class CoutTime extends React.Component{
       ctx.translate(hoursWidth/2,hoursWidth/2);
       ctx.rotate(dayAngle);
       ctx.beginPath();
-      ctx.moveTo(0,-(imgRad-30));
+      ctx.moveTo(0,-(imgRad-60));
       ctx.lineTo(0,20*ratio);
       ctx.lineCap = 'round';
       ctx.stroke();
@@ -153,7 +153,7 @@ class CoutTime extends React.Component{
     ctx.lineWidth = 2*ratio;
     ctx.strokeStyle="#ff0011";
     ctx.translate(hoursWidth/2,hoursWidth/2);
-    ctx.rotate(angle);
+    ctx.rotate(angle/2);
     ctx.beginPath();
     ctx.moveTo(0,-imgRad);
     ctx.lineTo(0,30*ratio);
@@ -179,11 +179,13 @@ class CoutTime extends React.Component{
 
 
     return (
-      <div>
+      <div >
       {this.state.showStatus===1&&
-          (<div className={styles.bodyHours} style={{width:hoursWidth+'px',height:hoursWidth+'px'}}>
+          (
+          <div className={styles.hours}>  <div className={styles.bodyHours} style={{width:hoursWidth+'px',height:hoursWidth+'px'}}>
           <canvas ref={this.CanavasId} width={wh} height={wh}></canvas>
-        </div>)
+          </div></div>
+          )
 
       }
       </div>

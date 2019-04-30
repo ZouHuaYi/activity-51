@@ -7,3 +7,10 @@
   display: block;
   border-radius: 50% 50%;
 }
+.hours{
+  width: 100%;
+  padding: 200px 0;
+  box-sizing: border-box;
+  background: url("@/assets/hours.jpg")no-repeat;
+  background-size: 100% 100%;
+}

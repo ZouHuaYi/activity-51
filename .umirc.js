@@ -1,8 +1,3 @@
-// ref: https://umijs.org/config/
-
-// const PurifyCssWebpack  = require('purifycss-webpack');
-// const glob = require('glob');
-// const path = require('path');
 
 export default {
   // treeShaking: true,
@@ -40,15 +35,15 @@ export default {
       .loader('px2rem-loader')
       .before('postcss-loader')
       .options({
-        "rootValue": 75, // 换算的基数
+        "rootValue": 75,                      // 换算的基数
         "selectorBlackList": ["antd-mobile"], // 忽略转换正则匹配项
         "minPixelValue": 2,
         "propList": ["*"]
       })
   },
   autoprefixer:{ // 配置css兼容问题
-    browsers: ['last 7 iOS versions', 'last 3 versions', '> 1%'],
-    flexbox: true
+    // browsers: ['last 7 iOS versions', 'last 3 versions', '> 1%'],
+    // flexbox: true
   },
   extraPostCSSPlugins:[],
   extraBabelPlugins:[ // 提前加载 css文件
@@ -60,13 +55,10 @@ export default {
   publicPath:'./',
   outputPath:'./activity',
   cssPublicPath:'./',
-  // exportStatic:{
-  //   dynamicRoot:false
-  // },
   history: 'hash',
   proxy: {
     '/api': {
-      target: 'http://test.topmei3mei.com/',
+      target: 'http://admin.topmei3mei.com/',
       // target: 'http://192.168.2.236:8080/msm/',
       changeOrigin: true,
       pathRewrite: {

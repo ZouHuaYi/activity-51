@@ -1,0 +1,28 @@
+.music{
+  width: 80px;
+  height: 80px;
+  position: fixed;
+  top: 50px;
+  left: 20px;
+  border-radius: 50%;
+  z-index: 10000;
+  overflow: hidden;
+  background: #B50005;
+  box-shadow: 0 0 10px #C05A79;
+}
+.imgs.on{
+  animation: rotation 3s linear infinite;
+}
+.imgs,.imgs img{
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+@keyframes rotation{
+  from {-webkit-transform: rotate(0deg);}
+  to {-webkit-transform: rotate(360deg);}
+}
+.audio{
+  opacity: 0;
+}

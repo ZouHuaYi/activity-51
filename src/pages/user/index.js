@@ -124,11 +124,11 @@ class User extends React.Component{
           {
             rewardData.appletPackageBuyUrl&&(
               <div className={styles.buyMak}>
-                <div className={styles.buyText}>
-                  长按小程序码购买精美面膜
-                </div>
                 <div className={styles.makImg}>
                   <img src={rewardData.appletPackageBuyUrl} alt=""/>
+                </div>
+                <div className={styles.buyText}>
+                  长按小程序码购买精美面膜
                 </div>
               </div>
             )
