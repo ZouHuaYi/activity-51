@@ -35,14 +35,14 @@
 }
 .centerMan{
   position: fixed;
-  width: 70px;
-  height: 70px;
-  background: #0fe2d5;
+  width: 80px;
+  height: 80px;
   bottom: 120px;
   right: 20px;
   text-align: center;
   border-radius: 50%;
-  z-index: 10000;
+  z-index: 900;
+  background: radial-gradient(#FE9117,#FFB754,#FFBB5C);
 }
 .centerMan:after,.centerMan:before{
   position:absolute;
@@ -73,7 +73,7 @@
   background: #F7B044;
   color: #ffffff;
   font-size: 22px;
-  line-height: 28px;
+  line-height: 30px;
   box-sizing: border-box;
   padding-top: 10px;
 }

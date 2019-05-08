@@ -1,9 +1,3 @@
-// import 'lib-flexible';
-
-
-
-
-
 
 export const dva = {
   config: {

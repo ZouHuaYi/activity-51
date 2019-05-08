@@ -96,6 +96,16 @@ class CicleCanvas extends React.Component{
       this.ctx.drawImage(imageList[index],-imgWidth/2*ratio,(imgBaseBack||10)*ratio,imgWidth*ratio,imgHeight*ratio);
     }
     this.ctx.restore();
+    this.ctx.beginPath();
+    this.ctx.lineWidth = 2*ratio;
+    this.ctx.moveTo(semiWidth,semiWidth);
+    const lineX = (semiWidth+20)*Math.cos(angle)+ semiWidth;
+    const lineY = (semiWidth+20)*Math.sin(angle)+ semiWidth;
+    this.ctx.lineTo(lineX,lineY);
+    this.ctx.save();
+    this.ctx.stroke();
+
+
   }
 
   render(){

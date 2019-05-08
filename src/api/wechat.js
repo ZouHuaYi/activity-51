@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import {getUserId} from "@/utils/jscookie";
+import {getUserId,getOpenId,getActivityId} from "@/utils/jscookie";
 
 export async function signShare() {
   return request('/rest/user/getSign',{
@@ -53,13 +53,29 @@ export async function getAvater(params) {
   })
 }
 
+// 生成微信抽奖定单
+export async function createOrder() {
+  return request('/rest/activity/paid/draw/order/place',{
+    method:'POST',
+    body:{
+      activityId:getActivityId()
+    }
+  })
+}
 
-// 微信分享签名
-// export async function wechatSiginal() {
-//   return request('/rest/user/getSign',{
-//     method:'POST',
-//     body:{
-//       uri:encodeURIComponent(window.location.href.split("#")[0])
-//     }
-//   })
-// }
+// 微信支付签名
+export async function paySign(params) {
+  return request('/rest/activity/paid/draw/buy/order',{
+    method:'POST',
+    body:{
+      orderNumber:params.orderNumber,   // 支付订单号
+      payType:6,
+      transactionType:1,
+      openid: getOpenId()
+    }
+  })
+}
+
+
+
+

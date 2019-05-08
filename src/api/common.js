@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import {getUserId,getActivityId} from "@/utils/jscookie"
+import {getUserId,getActivityId,getParentId} from "@/utils/jscookie"
 
 
 // 添加地址
@@ -31,7 +31,8 @@ export async function drawRaffle() {
   return request('/rest/activity/user/draw/award',{
     method:"POST",
     body: {
-      activityId:getActivityId()
+      activityId:getActivityId(),
+      inviterId:getParentId()||'',
     }
   })
 }
@@ -78,8 +79,6 @@ export async function setDefaultAddress(params) {
   })
 }
 
-
-
 // 用户提取积分兑换生成订单
 export async function orderPlace(params) {
   return request('/rest/activity/order/place',{
@@ -101,6 +100,28 @@ export async function invitation(params) {
     body: {
       userId:params.userId,
       inviterId:params.inviterId,
+    }
+  })
+}
+
+// 支付后获取奖品
+export async function payFinishReward(params) {
+  return request('/rest/activity/user/paid/draw/award',{
+    method:'POST',
+    body:{
+      activityId:getActivityId(),
+      orderNumber:params.orderNumber,
+    }
+  })
+}
+
+// 取消订单的接口
+export async function cancelOrder(params) {
+  return request('/rest/activity/paid/order/cancell',{
+    method:'POST',
+    body:{
+      activityId:getActivityId(),
+      orderNumber:params.orderNumber
     }
   })
 }

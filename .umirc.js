@@ -49,6 +49,11 @@ export default {
   extraBabelPlugins:[ // 提前加载 css文件
     ["import",
       { "libraryName": "antd-mobile", "style": "css" }
+    ],
+    [
+      "transform-remove-console",{
+      "exclude":["error","warn"]
+      }
     ]
   ],
   base:'/activity',
@@ -58,7 +63,7 @@ export default {
   history: 'hash',
   proxy: {
     '/api': {
-      target: 'http://admin.topmei3mei.com/',
+      target: 'https://test.topmei3mei.com/',
       // target: 'http://192.168.2.236:8080/msm/',
       changeOrigin: true,
       pathRewrite: {

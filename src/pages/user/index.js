@@ -9,6 +9,9 @@ const header = require('@/assets/header_ok.jpg');
 import router from 'umi/router';
 import {WhiteSpace} from 'antd-mobile';
 import {connect} from 'dva';
+import {clearPath} from '@/utils/utils'
+
+const QRCode = require('qrcode.react');
 const shareImg = require('@/assets/share.png');
 
 @connect(({user})=>({
@@ -81,6 +84,10 @@ class User extends React.Component{
             赶快邀请好友集齐吧！`}}>
           </div>
           <WhiteSpace size='lg'/>
+          <div className={styles.qrcode}>
+            <QRCode value={clearPath()} size={150} level={'L'}  />
+          </div>
+          <WhiteSpace size='lg'/>
           <div className={styles.person}>
             <div className={styles.personImg}>
               {
@@ -120,6 +127,7 @@ class User extends React.Component{
               </div>
             )
           }
+
           <WhiteSpace size='lg'/>
           {
             rewardData.appletPackageBuyUrl&&(

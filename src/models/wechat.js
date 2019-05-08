@@ -60,7 +60,7 @@ export default {
       });
       wx.ready(() => {
         const imgurl = window.location.protocol +"//" +document.domain +"/activity/sharelogo.jpg?t="+Math.random();
-        const title = '火得一塌糊涂的艺术家同款面膜免费领，限时8天，多一秒无！！！';
+        const title = '带走一瓶玻尿酸精华原液只需要分享好朋友就够了！';
         const desc = 'hi，girl西班牙艺术家同款玻尿酸面膜!\n全球首款艺术面膜上市抢首发，这次给你一款装饰公寓的面膜，一个旅途路上的伴侣及拿得出手的精致礼物。';
         wx.onMenuShareTimeline({
           title: title, // 分享标题

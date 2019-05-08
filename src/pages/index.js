@@ -41,7 +41,7 @@ class TodoList extends Component {
         imgHeight:120,
         imgBaseBack:-10,
         printerImg:printer,
-        printerMarginTop:-10
+        printerMarginTop:-35
       },
     }
   }
@@ -128,6 +128,7 @@ class TodoList extends Component {
     this.props.dispatch({
       type: 'global/awardPrize',
       callback: (index)=>{
+        console.log(90,index);
         this.setState({
           endPrizeClick:true
         })
@@ -232,7 +233,7 @@ class TodoList extends Component {
         <div className={styles.centerMan}>
           <a href='javascript:;' onClick={this.goToOrder} className={styles.goCenter} >个人<br/>中心</a>
         </div>
-        {this.state.endPrizeStatus&&prizeData&&(
+        {this.state.endPrizeStatus&&prizeData&&prizeData.awardEntity&&(
             <div className={styles.awardBox}>
               <div className={styles.awardMak} onClick={()=>{
                 this.setState({
@@ -241,9 +242,9 @@ class TodoList extends Component {
               }}></div>
               <div className={styles.awardbody}>
                 <div className={styles.awardImg}>
-                  <img src={prizeData.awardImg} alt=""/>
+                  <img src={prizeData.awardEntity.awardImg} alt=""/>
                 </div>
-                <div className={styles.awardText}>{prizeData.name}</div>
+                <div className={styles.awardText}>{prizeData.awardEntity.name}</div>
                 <Link className={styles.awardBtn} to='/user' >领取奖品</Link>
               </div>
             </div>

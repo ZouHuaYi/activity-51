@@ -123,3 +123,45 @@ export function getPixelRatio (context) {
 
 
 
+// 微信支付
+
+export function jsSdk(signData,success,fail) {
+  // 判断微信的WeixinJSBridge
+  if (typeof WeixinJSBridge == "undefined"){
+    if(document.addEventListener){
+      document.addEventListener('WeixinJSBridgeReady', ()=>{onBridgeReady(signData,success,fail)}, false);
+    }else if (document.attachEvent){
+      document.attachEvent('WeixinJSBridgeReady', ()=>{onBridgeReady(signData,success,fail)});
+      document.attachEvent('onWeixinJSBridgeReady', ()=>{onBridgeReady(signData,success,fail)});
+    }
+  }else{
+    onBridgeReady(signData,success,fail);
+  }
+}
+
+function onBridgeReady(payOption,success,fail) {
+  console.log(payOption)
+  // 触发微信支付
+  WeixinJSBridge.invoke(
+    'getBrandWCPayRequest', {
+      appId: payOption.appid, //公众号名称，由商户传入
+      timeStamp: payOption.timestamp, //时间戳，自1970年以来的秒数
+      nonceStr: payOption.noncestr, //随机串
+      package: payOption.package,    //prepay_id用等式的格式
+      signType: 'MD5',   //微信签名方式：
+      paySign: payOption.sign,     //微信签名
+    },
+    function(res){
+      if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+        // 支付成功 返回成功页
+        success&&success()
+      } else{
+        //  取消支付或者其他情况 get_brand_wcpay_request:cancel get_brand_wcpay_request:fail
+        fail&&fail('支付取消了')
+      }
+    }
+  );
+}
+
+
+

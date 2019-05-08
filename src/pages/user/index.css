@@ -85,7 +85,7 @@
 }
 .card{
   width: 90%;
-  margin: 0 auto;
+  margin: 0 auto 50px;
   background: #ffffff;
   box-shadow: 0 0 20px rgba(167,167,167,.4);
   padding: 26px 40px 60px;
@@ -257,4 +257,8 @@
   font-size: 32px;
   color: #666666;
   font-style: oblique;
+}
+.qrcode{
+  width: 100%;
+  text-align: center;
 }
