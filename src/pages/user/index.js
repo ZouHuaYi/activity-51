@@ -85,7 +85,7 @@ class User extends React.Component{
             exp&&exp.booking&&exp.booking==1?(
               <div>
                 <WhiteSpace size='lg'/>
-                 <p className={styles.textsup}>{rewardData.userAlreadyLuckDraw==true?'你已参团，赶快邀请好友领取更多大奖':'你已开团，获取精美枕头一个，赶快邀请好友领取更多大奖'} </p>
+                 <p className={styles.textsup}>{rewardData.userAlreadyLuckDraw==true?exp.cantuan:exp.kaituan} </p>
               </div>
             ):(
               <div>
@@ -141,7 +141,7 @@ class User extends React.Component{
               this.setState({
                 shareStatus:true
               })
-            }}>邀请好友</a>
+            }}>马上邀请好友</a>
             {
               exp&&exp.booking&&exp.booking==1?'':(<a className={styles.btnShop+' '+ (divisor>0?styles.active:'')} onClick={this.goToOrder.bind(this,intNumber)} href="javascript:;">提货</a>)
             }
@@ -165,13 +165,12 @@ class User extends React.Component{
                   <div className={styles.makImg}>
                     <img src={exp.appletBuyUrl} alt=""/>
                   </div>
-                  {
-                    exp&&exp.booking&&exp.booking==1?'':(
                       <div className={styles.buyText}>
-                        长按小程序码购买精美面膜
+                        {
+                          exp&&exp.booking&&exp.booking==1?exp.introdution:'长按小程序码购买精美面膜'
+                        }
                       </div>
-                    )
-                  }
+
               </div>
             )
           }
