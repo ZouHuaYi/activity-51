@@ -10,6 +10,10 @@ const MSM_OPEN_ID = 'Open-Id';
 const MSM_HOSPITAL_ID = 'Hospital-Id';
 
 
+export function getBooking() {
+  return window.sessionStorage.getItem(MSM_BOOKING);
+}
+
 export function setHospitalId(value) {
   if(!value) return;
   return window.sessionStorage.setItem(MSM_HOSPITAL_ID,value);

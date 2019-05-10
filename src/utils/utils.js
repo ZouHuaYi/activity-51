@@ -107,7 +107,7 @@ export function counterTime(fmt,timestamp) {
 // 清空分享链接的函数
 export function clearPath() {
   const pathName = new URL(''+window.location.href);
-  return `${pathName.origin}${pathName.pathname}?inviterId=${getUserId()||getParentId()}&hospitalId=${getHospitalId()}&activity=${getActivityId()}`;
+  return `${pathName.origin}${pathName.pathname}?inviterId=${getUserId()||getParentId()}&activity=${getActivityId()}`;
 }
 
 // 画布的像素比的获取
@@ -140,12 +140,11 @@ export function jsSdk(signData,success,fail) {
 }
 
 function onBridgeReady(payOption,success,fail) {
-  console.log(payOption)
   // 触发微信支付
   WeixinJSBridge.invoke(
     'getBrandWCPayRequest', {
       appId: payOption.appid, //公众号名称，由商户传入
-      timeStamp: payOption.timestamp, //时间戳，自1970年以来的秒数
+      timeStamp: payOption.timestamp+'', //时间戳，自1970年以来的秒数
       nonceStr: payOption.noncestr, //随机串
       package: payOption.package,    //prepay_id用等式的格式
       signType: 'MD5',   //微信签名方式：

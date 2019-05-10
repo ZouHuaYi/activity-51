@@ -4,7 +4,11 @@
 
 import React,{ Component } from 'react';
 import styles from './index.css';
-import { Modal
+import {
+  Modal,
+  Button,
+  WhiteSpace,
+  Icon
 } from 'antd-mobile';
 import { getToken } from '@/utils/jscookie';
 import CicleCanvas from '@/components/Raffle/CicleCanvas';
@@ -23,7 +27,8 @@ const giftBay = require('@/assets/sale.png');
 
 @connect(({global,loading})=>({
   global,
-  prizeLoading:loading.effects['global/awardPrize']
+  prizeLoading:loading.effects['global/awardPrize'],
+  payLoad:loading.effects['global/wechatPayFun']
 }))
 
 class TodoList extends Component {
@@ -34,6 +39,7 @@ class TodoList extends Component {
       canvasWidth:window.innerWidth-40,
       endPrizeStatus:false,
       endPrizeClick:false,
+      bookingStatus:false,
       canavsConfig:{
         canvasWidth:window.innerWidth-15,
         allCircle:12,
@@ -47,13 +53,18 @@ class TodoList extends Component {
   }
 
   componentDidMount(){
-    this.props.dispatch({
-      type:'global/getRaffleData',
-      callback:()=>{
-        // 这里执行获取数据成功后的函数
-        this.awardConfig();
-      }
-    })
+    if(this.props.global.raffleData!==null){
+      this.awardConfig();
+    }else {
+      this.props.dispatch({
+        type:'global/getRaffleData',
+        callback:()=>{
+          // 这里执行获取数据成功后的函数
+          this.awardConfig();
+        }
+      })
+    }
+
   }
   // 跳转登陆
   goToOrder =()=>{
@@ -72,9 +83,11 @@ class TodoList extends Component {
   // 抽奖组件的配置完成函数
   awardConfig = () => {
     const {raffleData} = this.props.global;
+
     let imageList = [];
     if(raffleData){
       const length  = raffleData.awardList.length;
+      if(length==0) return;
       let promiseAll = [];
       let img = [];
       for(let i=0;i<length;i++){
@@ -102,7 +115,10 @@ class TodoList extends Component {
           canavsConfig:config
         },()=>{
           // 执行转盘函数
-          this.cirCanvas.loadCanvas();
+          if(this.cirCanvas){
+            this.cirCanvas.loadCanvas();
+          }
+
         })
       }).catch(err=>{
         console.log(err);
@@ -128,7 +144,6 @@ class TodoList extends Component {
     this.props.dispatch({
       type: 'global/awardPrize',
       callback: (index)=>{
-        console.log(90,index);
         this.setState({
           endPrizeClick:true
         })
@@ -153,6 +168,36 @@ class TodoList extends Component {
     },1000);
   }
 
+  // 点击拼团的函数
+  showToGBooking = () => {
+    if(!getToken()){
+      Modal.alert('温馨提示','请先登录,才可以参加拼团',[
+        {text:'取消',onPress:()=>{}},
+        {text:'确定',onPress:()=>{
+            router.push('/login');
+          }}
+      ])
+      return;
+    }
+    this.setState({
+      bookingStatus:true,
+    })
+  }
+
+  // 关闭拼团
+  closeToBooking = () => {
+    this.setState({
+      bookingStatus:false
+    })
+  }
+
+  // 购买一元拼团
+  payMonney = () => {
+    if(this.props.payLoad===true) return;
+    this.props.dispatch({
+      type:'global/wechatPayFun',
+    })
+  }
 
   render() {
     const colors = ["#5f109e","#ffffff","#5f109e","#ffffff","#5f109e","#ffffff","#5f109e"];
@@ -160,6 +205,7 @@ class TodoList extends Component {
     let expandContent = {};
     let bannerList = [];
     let ruleImgSet = [];
+    let awardList = {};
     if(raffleData){
       try {
         expandContent = JSON.parse(raffleData.expandContent);
@@ -172,12 +218,15 @@ class TodoList extends Component {
           return item;
         });
       }catch (e) {}
+      try {
+        awardList = raffleData.awardList[0]
+      }catch (e) {}
 
     }
     return (
       <div style={{background:'#9C0004'}}>
         {
-          expandContent.musicUrl&&(<Music src={expandContent.musicUrl}/>)
+          expandContent&&expandContent.musicUrl&&(<Music src={expandContent.musicUrl}/>)
         }
 
         {
@@ -192,7 +241,7 @@ class TodoList extends Component {
             topImg={expandContent.maskImg}
           />
         }
-        {expandContent.storyUrl&&
+        {expandContent&&expandContent.storyUrl&&
           (
             <div style={{width:'100%'}}>
               <img style={{display:'block',width:'100%'}} src={expandContent.storyUrl} alt=""/>
@@ -206,33 +255,48 @@ class TodoList extends Component {
           dotStyle={{background:'rgba(255,255,255,0.5)'}}
           dotActiveStyle={{background:'#ffffff'}}
         />
-        <Hours
-          hoursWidth={this.state.canvasWidth}
-          timestamp={expandContent.countdown}
-        />
         {
-          ruleImgSet[0]&&(
+          expandContent&&expandContent.countdown&&(
+            <Hours
+              hoursWidth={this.state.canvasWidth}
+              timestamp={expandContent.countdown}
+            />
+          )
+        }
+        {
+          ruleImgSet&&ruleImgSet[0]&&(
             <div className={styles.bannerOver}>
               <img src={ruleImgSet[0]} alt=""/>
             </div>
           )
         }
-        <div className={styles.raffleBox}>
-          <div className={styles.rafTitle}>
-            <h3>抽奖赢豪礼</h3>
-            <h3>百分百中奖</h3>
-          </div>
-          <CicleCanvas
-            onRef={this.onCanvas}
-            startDraw={this.startDraw}
-            startPraise={this.startPraise}
-            {...this.state.canavsConfig}
-            prizeEnd={this.prizeEnd}
-          />
-        </div>
-        <div className={styles.centerMan}>
-          <a href='javascript:;' onClick={this.goToOrder} className={styles.goCenter} >个人<br/>中心</a>
-        </div>
+        {
+          raffleData&&raffleData.freeDrawCount>0&&(
+          <div className={styles.raffleBox}>
+            <div className={styles.rafTitle}>
+              <h3>抽奖赢豪礼</h3>
+              <h3>百分百中奖</h3>
+            </div>
+            <CicleCanvas
+              onRef={this.onCanvas}
+              startDraw={this.startDraw}
+              startPraise={this.startPraise}
+              {...this.state.canavsConfig}
+              prizeEnd={this.prizeEnd}
+            />
+          </div>)
+        }
+
+
+
+        {
+          expandContent&&expandContent.booking&&expandContent.booking==1?'':(
+            <div className={styles.centerMan}>
+              <a href='javascript:;' onClick={this.goToOrder} className={styles.goCenter} >个人<br/>中心</a>
+            </div>
+          )
+        }
+
         {this.state.endPrizeStatus&&prizeData&&prizeData.awardEntity&&(
             <div className={styles.awardBox}>
               <div className={styles.awardMak} onClick={()=>{
@@ -250,11 +314,45 @@ class TodoList extends Component {
             </div>
           )
         }
-        {expandContent.girlUrl&&(
-          <div style={{width:'100%'}}>
-            <img style={{display:'block',width:'100%'}} src={expandContent.girlUrl} alt=""/>
-          </div>
-        )
+        {expandContent&&expandContent.girlUrl&&(
+            <div style={{width:'100%'}}>
+              <img style={{display:'block',width:'100%'}} src={expandContent.girlUrl} alt=""/>
+            </div>
+          )
+        }
+        {expandContent&&expandContent.booking&&expandContent.booking==1&&(
+            <div>
+              <div className={styles.lineGl}></div>
+              <div className={styles.buyBtn}>
+                <a onClick={this.goToOrder} className={styles.pbtnList} href="javascript:;">我要开团（免开团费）</a>
+                <a onClick={this.showToGBooking} className={styles.pbtn} href="javascript:;">我要参团</a>
+              </div>
+            </div>
+          )
+        }
+        {
+          this.state.bookingStatus&&(
+            <div className={styles.showBooking}>
+              <div className={styles.bookMak} onClick={this.closeToBooking}></div>
+              <div className={styles.BookBox}>
+                <div className={styles.bookclose} ><Icon type='cross-circle' onClick={this.closeToBooking}></Icon></div>
+                <WhiteSpace size={'xl'} />
+                <div className={styles.bookimg}><img src={awardList.awardImg} alt=""/></div>
+                <WhiteSpace size={'lg'} />
+                <div className={styles.bookname}>{awardList.name}</div>
+                <WhiteSpace size={'xl'} />
+                <div className={styles.booktype}>
+                  <h5>获取方式</h5>
+                  <WhiteSpace size='lg' />
+                  <div className={styles.bookPrice}>{raffleData.paidDrawPrice} 元参团</div>
+                </div>
+                <WhiteSpace size={'xl'} />
+                <div className={styles.bookBtn}>
+                  <Button type="primary" onClick={this.payMonney}>确定</Button>
+                </div>
+              </div>
+            </div>
+          )
         }
       </div>
     );

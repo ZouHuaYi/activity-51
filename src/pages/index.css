@@ -148,3 +148,104 @@
 :global .slider-decorator-0{
   bottom: 40px !important;
 }
+.buyBtn{
+  position: fixed;
+  width: 100%;
+  height: 180px;
+  line-height: 90px;
+  background: #FFC84A;
+  bottom: 0;
+  left: 0;
+  z-index: 900;
+}
+.pbtnList{
+  display: block;
+  width: 100%;
+  height: 50%;
+  text-align: center;
+  color: #ffffff;
+  font-size: 30px;
+  background: #00cd00;
+}
+.buyBtn .pbtn{
+  display: block;
+  width: 100%;
+  height: 50%;
+  text-align: center;
+  color: #ffffff;
+  font-size: 30px;
+}
+.lineGl{
+  width: 100%;
+  height: 180px;
+}
+.showBooking{
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  z-index: 901;
+  top: 0;
+  left: 0;
+}
+.bookMak{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,.5);
+}
+.BookBox{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding-bottom: 30px;
+  background: #ffffff;
+  border-radius: 20px 20px 0 0;
+}
+.bookimg{
+  width: 360px;
+  height: 360px;
+  margin: 0 auto;
+}
+.bookimg img{
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px 20px;
+}
+.bookname{
+  width: 100%;
+  text-align: center;
+  font-size: 30px;
+}
+.booktype{
+  width: 100%;
+  padding: 0 30px;
+  box-sizing: border-box;
+}
+.booktype h5{
+  font-size: 30px;
+  font-weight: 500;
+  color: #3D3D3D;
+}
+.bookPrice{
+  display: inline-block;
+  padding: 16px 30px;
+  font-size: 26px;
+  line-height: 28px;
+  background: #00CD00;
+  color: #ffffff;
+}
+.bookBtn{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 30px;
+}
+.bookclose{
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  color: #AFAFAF;
+}

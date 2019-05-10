@@ -1,7 +1,7 @@
 import {
   signShare,
   getUnionId,
-  getAvater,
+  getWechatUserInfo,
 }from '@/api/wechat';
 import {Toast} from 'antd-mobile';
 import {setUserId,setToken,setUnionId,setOpenId} from "@/utils/jscookie";
@@ -25,11 +25,7 @@ export default {
         setUnionId(response.data.unionid);
         setOpenId(response.data.openid);
       }
-      yield put({
-        type:'signHandle'
-      })
     },
-    //
     // 获取签名然后分享出去
     *signHandle(_, {put, call}) {
       const response = yield call(signShare, _);
@@ -44,8 +40,23 @@ export default {
       }
     },
     // 分享出去的动作
-    *shareWechat({sign},{put,call}){
+    *shareWechat({sign},{put,call,select}){
       const {appId,timestamp,nonceStr,signature} = sign;
+      const infoData = yield call(getWechatUserInfo);
+      const raffleData = yield select(state => state.global.raffleData);
+
+      let expandContent = {};
+      let info = {};
+      try {
+        expandContent = JSON.parse(raffleData.expandContent)||{};
+      }catch (e) { }
+
+      try {
+        if(infoData.messageCode==900){
+          info = JSON.parse(infoData.data);
+        }
+      }catch (e) {}
+
       wx.config({
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: appId, // 必填，公众号的唯一标识
@@ -58,10 +69,12 @@ export default {
           "onMenuShareQQ"
         ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
       });
+
       wx.ready(() => {
-        const imgurl = window.location.protocol +"//" +document.domain +"/activity/sharelogo.jpg?t="+Math.random();
-        const title = '带走一瓶玻尿酸精华原液只需要分享好朋友就够了！';
-        const desc = 'hi，girl西班牙艺术家同款玻尿酸面膜!\n全球首款艺术面膜上市抢首发，这次给你一款装饰公寓的面膜，一个旅途路上的伴侣及拿得出手的精致礼物。';
+        const imgurl = expandContent.shareImg?expandContent.shareImg:window.location.protocol +"//" +document.domain +"/activity/sharelogo.jpg?t="+Math.random();
+        const title = expandContent.shareTitle?(expandContent.booking&&expandContent.booking==1&&info&&info.nickname?'我是'+info.nickname+'，'+expandContent.shareTitle:expandContent.shareTitle):'';
+        const desc = expandContent.shareSubTitle?expandContent.shareSubTitle:'';
+
         wx.onMenuShareTimeline({
           title: title, // 分享标题
           desc: desc, // 分享描述

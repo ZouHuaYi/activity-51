@@ -76,6 +76,16 @@ export async function paySign(params) {
   })
 }
 
+// 获取微信详细信息
+export async function getWechatUserInfo() {
+  return request('/rest/user/getWechatUserInfo',{
+    method:'POST',
+    body:{
+      openid:getOpenId()
+    }
+  })
+}
+
 
 
 

@@ -94,12 +94,12 @@ export async function orderPlace(params) {
 }
 
 // 用户绑定
-export async function invitation(params) {
+export async function invitation() {
   return request('/rest/activity/user/invitation',{
     method:"POST",
     body: {
-      userId:params.userId,
-      inviterId:params.inviterId,
+      activityId:getActivityId(),
+      inviterId:getParentId()||'',
     }
   })
 }

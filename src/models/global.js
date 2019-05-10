@@ -1,8 +1,10 @@
-import {addAddress,getRaffleData,drawRaffle,payFinishReward,cancelOrder} from '@/api/common';
+import {addAddress,getRaffleData,drawRaffle,payFinishReward,cancelOrder,invitation} from '@/api/common';
 import {createOrder,paySign} from "@/api/wechat";
 import { Toast,Modal} from 'antd-mobile';
 import router from 'umi/router';
 import {jsSdk} from "@/utils/utils";
+import {setBooking} from "@/utils/jscookie";
+
 
 let loopNumber = 0;
 
@@ -20,16 +22,25 @@ export default {
       const response = yield call(getRaffleData);
       Toast.hide();
       if(response.messageCode!==900){
+        try {
+          const expandContent = JSON.parse(response.data.expandContent);
+          setBooking(expandContent.booking);
+        }catch (e) { }
+
        yield put({
           type: 'saveRaffleData',
           data:response.data,
         });
+       // 微信签名部分
+        window.g_app._store.dispatch({
+          type:'wechat/signHandle',
+        })
         callback&&callback();
       }else {
         Toast.info(response.message?response.message:'保存失败，请重试！', 2);
       }
     },
-    // 中奖请求
+    // 免费抽奖走的支付部分 中奖请求
     *awardPrize({callback},{put,call,select}){
       const response = yield call(drawRaffle);
       let raffleData = {};
@@ -43,12 +54,14 @@ export default {
         (raffleData.awardList).forEach((item,key)=>{
           if(item.id===response.data.awardId){
             callback&&callback(key);
+            if(raffleData.inviteForm==1){// 绑定用户
+              invitation();
+            }
             return;
           }
         })
       }else if(response.messageCode==1520){
         raffleData = yield select(state => state.global.raffleData);
-        console.log(window.g_app._store)
         Modal.alert('温馨提示',response.message||'你需要付费抽奖！',[
           {text:'取消',onPress:()=>{}},
           {text:'确定',onPress:()=>{
@@ -75,19 +88,18 @@ export default {
                             type:'global/savePrizeData',
                             data:resPay.data,
                           })
-
-                          console.log('过不去')
                           Toast.hide();
+                          // 获取中奖的位置
                           (raffleData.awardList).forEach((item,key)=>{
                             if(item.id===resPay.data.awardId){
-                              console.log(key+'是多少啊')
                               callback&&callback(key);
+                              if(raffleData.inviteForm==1){// 绑定用户
+                                invitation();
+                              }
                               return;
                             }
                           })
-
                         })
-
                       },()=>{
                         // 支付失败或者取消的时候
                         Toast.info('支付失败', 2);
@@ -115,6 +127,37 @@ export default {
           {text:'确定',onPress:()=>{}}
         ])
       }
+    },
+    // 拼团时候走的支付部分 调起微信支付的函数
+    *wechatPayFun(_,{call,put}){
+      Toast.loading('正在调起支付',20);
+      const res = yield call(drawRaffle);
+      if(res.messageCode==1520){
+        const response = yield call(createOrder,_);
+        if(response.messageCode==900){
+          const sign = yield call(paySign,{orderNumber:response.data.orderNumber});
+          Toast.hide();
+          if(sign.messageCode==900){
+            console.log('准备支付钱了')
+            jsSdk(sign.data,()=>{
+              // 绑定
+              invitation();
+              router.push('/user');
+            },()=>{
+              Toast.info('支付失败', 2);
+              // 取消支付的时候，删除支付订单
+              cancelOrder({orderNumber:response.data.orderNumber});
+            })
+          }else {
+            Toast.info(sign.message?sign.message:'微信签名失败', 2);
+          }
+        }else {
+          Toast.info(sign.message?sign.message:'无法下单', 2);
+        }
+      }else {
+        Toast.info('你已经参加拼团啦！', 2);
+      }
+
     }
   },
   reducers:{
@@ -125,7 +168,6 @@ export default {
       }
     },
     savePrizeData(state,action){
-      console.log(action,'来了老弟')
       return{
         ...state,
         prizeData:action.data
@@ -151,7 +193,6 @@ export default {
 // 获取奖品的函数
 function finishRewardLoop(orderNumber,callback) {
   payFinishReward({orderNumber:orderNumber}).then((resPay)=>{
-    console.log(loopNumber)
     if(resPay.messageCode==900){
       if(resPay.data.awardId){
         console.log('我走回调函数了')

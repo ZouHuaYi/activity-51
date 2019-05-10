@@ -48,7 +48,6 @@ export default{
               setUserId(response.data.id);
               yield put({type:'changePasswordStatus',status:true});
               yield put({type:'saveUserInfo',data:response.data});
-              const wechatInfo = yield select(state=>state.wechat.wechatMessage);
             }else {
               Toast.info(response.message?response.message:'登录失败', 2);
             }
@@ -79,11 +78,7 @@ export default{
             Toast.hide();
             if(response.messageCode==900){
               // 设置成功后 绑定 微信 绑定父级
-              yield call(bindActivityParent);
-              try {
-
-              }catch (e) {
-              }finally {
+              // yield call(bindActivityParent);
                 try {
                   if(getUnionId()){
                     yield call(bindWechatApi,{id:getUserId(),unionId:getUnionId()});
@@ -93,7 +88,6 @@ export default{
                 }finally {
                   router.replace('/');
                 }
-              }
             }else {
               Toast.info(response.message?response.message:'密码设置失败', 2);
             }
