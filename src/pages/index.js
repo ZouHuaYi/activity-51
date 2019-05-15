@@ -324,8 +324,8 @@ class TodoList extends Component {
             <div>
               <div className={styles.lineGl}></div>
               <div className={styles.buyBtn}>
-                <a onClick={this.goToOrder} className={styles.pbtnList} href="javascript:;">我要开团（免开团费）</a>
-                <a onClick={this.showToGBooking} className={styles.pbtn} href="javascript:;">我要参团</a>
+                <a onClick={this.goToOrder} className={styles.pbtnList} href="javascript:;">{expandContent.firstButton?expandContent.firstButton:'我要开团（免开团费）'} </a>
+                <a onClick={this.showToGBooking} className={styles.pbtn} href="javascript:;">{expandContent.secondButton?expandContent.secondButton:'我要参团'}</a>
               </div>
             </div>
           )

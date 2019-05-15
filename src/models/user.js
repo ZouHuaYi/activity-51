@@ -4,7 +4,8 @@ import {
   getDefaultAddress,
   orderPlace,
   addAddress,
-  setDefaultAddress
+  setDefaultAddress,
+  awardPlace
 } from '@/api/common';
 import { Toast} from 'antd-mobile';
 import router from 'umi/router';
@@ -42,6 +43,21 @@ export default {
         })
       }else {
         Toast.info(response.message?response.message:'无法获取活动订单数据', 2);
+      }
+    },
+    // 兑换奖品的函数
+    *postAwardPlace({formData},{call,put}){
+      Toast.loading('正在提货',10);
+      const response = yield call(awardPlace,formData);
+      Toast.hide();
+      if(response.messageCode==900){
+        // 下单成功
+        Toast.info('提货成功', 2);
+        setTimeout(()=>{
+          router.goBack();
+        },2000)
+      }else {
+        Toast.info(response.message?response.message:'无法生成订单', 2);
       }
     },
     // 获取用户默认地址

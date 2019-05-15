@@ -93,6 +93,18 @@ export async function orderPlace(params) {
   })
 }
 
+// 用户 提取其他的奖品生成订单
+export async function awardPlace(params) {
+  return request('/rest/activity/award/order/place',{
+    method:"POST",
+    body:{
+      userAwardId:params.id,
+      addressId:params.addressId,
+    }
+  })
+}
+
+
 // 用户绑定
 export async function invitation() {
   return request('/rest/activity/user/invitation',{

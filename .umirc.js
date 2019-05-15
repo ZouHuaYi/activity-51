@@ -63,7 +63,7 @@ export default {
   history: 'hash',
   proxy: {
     '/api': {
-      target: 'https://test.topmei3mei.com/',
+      target: 'https://admin.topmei3mei.com/',
       // target: 'http://192.168.2.236:8080/msm/',
       changeOrigin: true,
       pathRewrite: {
@@ -71,5 +71,4 @@ export default {
       }
     }
   },
-
 }

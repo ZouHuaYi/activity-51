@@ -39,7 +39,7 @@ class User extends React.Component{
 
   // 跳转到下订单页面
   goToOrder = (num) => {
-    if(num<this.props.user.ordeInitData) return;
+    // if(num<this.props.user.ordeInitData) return;
     router.push('/order');
   }
 
@@ -142,9 +142,10 @@ class User extends React.Component{
                 shareStatus:true
               })
             }}>马上邀请好友</a>
-            {
-              exp&&exp.booking&&exp.booking==1?'':(<a className={styles.btnShop+' '+ (divisor>0?styles.active:'')} onClick={this.goToOrder.bind(this,intNumber)} href="javascript:;">提货</a>)
-            }
+            {/*{*/}
+            {/*  exp&&exp.booking&&exp.booking!=1?'':(<a className={styles.btnShop+' '+ (divisor>0?styles.active:'')} onClick={this.goToOrder.bind(this,intNumber)} href="javascript:;">提货</a>)*/}
+            {/*}*/}
+            <a className={styles.btnShop+' '+ styles.active} onClick={this.goToOrder.bind(this,intNumber)} href="javascript:;">提货</a>
           </div>
           {
             this.state.shareStatus&&(
@@ -170,7 +171,6 @@ class User extends React.Component{
                           exp&&exp.booking&&exp.booking==1?exp.introdution:'长按小程序码购买精美面膜'
                         }
                       </div>
-
               </div>
             )
           }
