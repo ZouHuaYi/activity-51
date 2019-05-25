@@ -89,20 +89,20 @@ class User extends React.Component{
               </div>
             ):(
               <div>
-                <div className={styles.ctitle}>
-                  <span className={styles.icon}></span>我的面膜
-                </div>
-                <div className={styles.listLine}>
-                  {list}
-                  <div className={styles.listBox}>
-                    <div className={styles.itemLine}>
-                      <div className={styles.tran} style={{width:remainder/5*100+'%'}}>
-                      </div>
-                    </div>
-                    <p className={styles.ileft}>{remainder}片</p>
-                    <p className={styles.iright}>5片</p>
-                  </div>
-                </div>
+                {/*<div className={styles.ctitle}>*/}
+                {/*  <span className={styles.icon}></span>我的面膜*/}
+                {/*</div>*/}
+                {/*<div className={styles.listLine}>*/}
+                {/*  {list}*/}
+                {/*  <div className={styles.listBox}>*/}
+                {/*    <div className={styles.itemLine}>*/}
+                {/*      <div className={styles.tran} style={{width:remainder/5*100+'%'}}>*/}
+                {/*      </div>*/}
+                {/*    </div>*/}
+                {/*    <p className={styles.ileft}>{remainder}片</p>*/}
+                {/*    <p className={styles.iright}>5片</p>*/}
+                {/*  </div>*/}
+                {/*</div>*/}
                 <div className={styles.textsup} dangerouslySetInnerHTML={{__html: divisor>0?`您已获得<span>${intNumber}</span>${rewardData.activityIntegralPoolName}，请尽快领取`:`您已获得<span>${intNumber}</span>${rewardData.activityIntegralPoolName}，还差<span>${5-remainder}</span>${rewardData.activityIntegralPoolName}可提货，
               赶快邀请好友集齐吧！`}}>
                 </div>
@@ -116,22 +116,23 @@ class User extends React.Component{
             <QRCode value={clearPath()} size={150} level={'L'}  />
           </div>
           <WhiteSpace size='lg'/>
+          <div className={styles.numPerson}>
+            已邀请{rewardData.userInviteCount}人
+          </div>
+          <WhiteSpace size='sm'/>
           <div className={styles.person}>
-            <div className={styles.personImg}>
+            <div className={styles.scrollPerson}>
               {
-                rewardData.inviteAvatarList&&rewardData.inviteAvatarList.length>0&&
-                rewardData.inviteAvatarList.map((item,key)=>{
-                  if(key<=5){
-                    return (
-                      <img key={key} src={item} alt=""/>
-                    )
-                  }
+                rewardData.memberList&&rewardData.memberList.map(item=>{
+                  return (
+                    <div className={styles.avterImg} key={item.id}>
+                      <img src={item.avatar} alt=""/>
+                      <div className={styles.nickname}>{item.nickname}</div>
+                    </div>
+                  )
                 })
               }
-              { rewardData.inviteAvatarList&&rewardData.inviteAvatarList.length>5&&(<span className={styles.imgOut}>...</span>) }
-            </div>
-            <div className={styles.numPerson}>
-              已邀请{rewardData.userInviteCount}人
+
             </div>
           </div>
           <WhiteSpace size='lg'/>

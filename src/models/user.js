@@ -5,7 +5,7 @@ import {
   orderPlace,
   addAddress,
   setDefaultAddress,
-  awardPlace
+  awardPlace,
 } from '@/api/common';
 import { Toast} from 'antd-mobile';
 import router from 'umi/router';
@@ -23,6 +23,7 @@ export default {
     // 获取用户信息
     *getUserCenterData({},{call,put}){
       const response = yield call(rewardUser);
+
       if(response.messageCode==900){
         yield put({
           type:'saveRewardData',
@@ -108,7 +109,6 @@ export default {
           type:'setAddressDefault',
           params:{addressId:response.data.id}
         })
-
         //router.goBack();
       }else {
         Toast.info(response.message?response.message:'保存失败，请重试！', 2);

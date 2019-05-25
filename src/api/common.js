@@ -137,3 +137,13 @@ export async function cancelOrder(params) {
     }
   })
 }
+
+// 获取拼团人数
+export async function getPersonNumber() {
+  return request('/rest/activity/can/tuan/count',{
+    method:'POST',
+    body:{
+      activityId:getActivityId(),
+    }
+  })
+}

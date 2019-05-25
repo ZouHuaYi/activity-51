@@ -18,7 +18,7 @@ import router from 'umi/router';
 }))
 class BasicInput extends React.Component {
   state = {
-    numberValue: 1,
+    numberValue: {},
   }
 
   componentDidMount(){
@@ -31,10 +31,17 @@ class BasicInput extends React.Component {
   }
 
   // 选择面膜数量
-  selectNumber = (val) => {
-    this.setState({
-      numberValue:val
+  selectNumber = (key,val) => {
+
+    this.setState(state=>{
+      return{
+        numberValue:{
+          ...state.numberValue,
+          [key]:val,
+        }
+      }
     })
+
   }
 
   onSubmit = (value) => {
@@ -43,9 +50,10 @@ class BasicInput extends React.Component {
       return;
     }
     // 执行下订单
-    const formData = {
+    let formData = {
       ...value,
-      productCount:this.state.numberValue
+      productCount:this.state.numberValue[value.key]||0,
+      key:undefined,
     }
 
     this.props.dispatch({
@@ -70,12 +78,10 @@ class BasicInput extends React.Component {
   }
 
   render() {
-    console.log(this.props.user)
+
     const { orderList,defaultAddress,rewardData,ordeInitData} = this.props.user;
     // if(!orderList) return "";
-    const intNumber =rewardData?Math.floor(Math.floor(rewardData.userActivityIntegral)/ordeInitData):1;
-    const userActivityAwardList = rewardData.userActivityAwardList;
-
+    const userActivityAwardList = rewardData?rewardData.userActivityAwardList:null;
 
     return (
       <div>
@@ -86,14 +92,18 @@ class BasicInput extends React.Component {
               renderHeader={() => '我要提货'}
             >
               {
-                orderList&&orderList.length>0&&
-                orderList.map((item,key)=>{
+                  orderList&&orderList.length>0&&
+                  orderList.map((item,key)=>{
+                  const intNumber =rewardData?Math.floor(Math.floor(rewardData.userActivityIntegral)/item.integralCount):0;
+
                   let config = null;
+                  let c_key = 'key_'+key
                   if(defaultAddress&&defaultAddress[0]){
                     config = {
                       addressId:defaultAddress[0].id,
                       productType:item.productType,
                       productOrPackageId:item.productOrPackageId,
+                      key:c_key,
                     }
                   }
 
@@ -131,9 +141,9 @@ class BasicInput extends React.Component {
                           }
                         </Item>
                       </List>
-                      <Item extra={<Stepper style={{ width: '100%', minWidth: '100px' }} min={1} onChange={this.selectNumber} max={intNumber} showNumber size="small" defaultValue={1} />}>提取数量（盒）</Item>
+                      <Item extra={<Stepper style={{ width: '100%', minWidth: '100px' }} min={0} onChange={this.selectNumber.bind(this,c_key)} max={intNumber} showNumber size="small" defaultValue={0} />}>提取数量（盒）</Item>
                       <Item>
-                        <Button type="primary" size="small" inline onClick={this.onSubmit.bind(this,config)}>积分兑换</Button>
+                        <Button type="primary" size="small" inline onClick={this.onSubmit.bind(this,config)}>领取礼品</Button>
                       </Item>
                       <WhiteSpace size='lg' style={{'background':'#F5F5F9'}} />
                     </div>

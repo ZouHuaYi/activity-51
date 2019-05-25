@@ -3,6 +3,7 @@
 html, body, #root {
   width: 100%;
   /*touch-action: none;*/
+  font-family: "Microsoft Yahei";
 }
 *{
   margin: 0;

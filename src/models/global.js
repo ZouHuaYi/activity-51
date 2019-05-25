@@ -1,4 +1,4 @@
-import {addAddress,getRaffleData,drawRaffle,payFinishReward,cancelOrder,invitation} from '@/api/common';
+import {addAddress,getRaffleData,drawRaffle,payFinishReward,cancelOrder,invitation,getPersonNumber} from '@/api/common';
 import {createOrder,paySign} from "@/api/wechat";
 import { Toast,Modal} from 'antd-mobile';
 import router from 'umi/router';
@@ -14,6 +14,7 @@ export default {
   state:{
     raffleData:null,
     prizeData:{},
+    personNumber:0,
   },
   effects:{
     // 获取抽奖奖品的数据
@@ -157,7 +158,18 @@ export default {
       }else {
         Toast.info('你已经参加拼团啦！', 2);
       }
-
+    },
+    // 获取拼团人数的
+    *getPersonNumber(_,{call,put}){
+      const response = yield call(getPersonNumber,_);
+      if(response.messageCode==900){
+        yield put({
+          type:'savePerson',
+          data:response.data,
+        })
+      }else {
+        Toast.info(response.message||'无法获取数据', 2);
+      }
     }
   },
   reducers:{
@@ -171,6 +183,12 @@ export default {
       return{
         ...state,
         prizeData:action.data
+      }
+    },
+    savePerson(state,action){
+      return{
+        ...state,
+        personNumber:action.data
       }
     }
   },

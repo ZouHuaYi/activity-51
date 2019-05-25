@@ -8,7 +8,8 @@ import {
   Modal,
   Button,
   WhiteSpace,
-  Icon
+  Icon,
+  List,
 } from 'antd-mobile';
 import { getToken } from '@/utils/jscookie';
 import CicleCanvas from '@/components/Raffle/CicleCanvas';
@@ -20,13 +21,16 @@ import { connect } from 'dva';
 import {Link} from 'umi';
 import Music from '@/components/Music/Music';
 
+const Item = List.Item;
+const Brief = Item.Brief;
 
 const printer = require('@/assets/click_gift.png');
 const headerOk = require('@/assets/header_ok.jpg');
 const giftBay = require('@/assets/sale.png');
 
-@connect(({global,loading})=>({
+@connect(({global,user,loading})=>({
   global,
+    user,
   prizeLoading:loading.effects['global/awardPrize'],
   payLoad:loading.effects['global/wechatPayFun']
 }))
@@ -179,6 +183,15 @@ class TodoList extends Component {
       ])
       return;
     }
+
+    this.props.dispatch({
+      type:'global/getPersonNumber'
+    })
+
+    this.props.dispatch({
+      type: 'user/getDefaultAddressData',
+    })
+
     this.setState({
       bookingStatus:true,
     })
@@ -194,14 +207,26 @@ class TodoList extends Component {
   // 购买一元拼团
   payMonney = () => {
     if(this.props.payLoad===true) return;
+    if(this.props.user.defaultAddress.length===0){
+      Modal.alert('温馨提示','请先填写收货地址',[
+        {text:'取消',onPress:()=>{}},
+        {text:'确定',onPress:()=>{
+            router.push('/address');
+          }}
+      ])
+      return;
+    }
+    // 调起支付
     this.props.dispatch({
       type:'global/wechatPayFun',
     })
   }
 
+
   render() {
     const colors = ["#5f109e","#ffffff","#5f109e","#ffffff","#5f109e","#ffffff","#5f109e"];
-    const { raffleData,prizeData } = this.props.global;
+    const { raffleData,prizeData,personNumber } = this.props.global;
+    const {defaultAddress} = this.props.user
     let expandContent = {};
     let bannerList = [];
     let ruleImgSet = [];
@@ -288,14 +313,9 @@ class TodoList extends Component {
         }
 
 
-
-        {
-          expandContent&&expandContent.booking&&expandContent.booking==1?'':(
-            <div className={styles.centerMan}>
-              <a href='javascript:;' onClick={this.goToOrder} className={styles.goCenter} >个人<br/>中心</a>
-            </div>
-          )
-        }
+        <div className={styles.centerMan}>
+          <a href='javascript:;' onClick={this.goToOrder} className={styles.goCenter} >个人<br/>中心</a>
+        </div>
 
         {this.state.endPrizeStatus&&prizeData&&prizeData.awardEntity&&(
             <div className={styles.awardBox}>
@@ -320,18 +340,18 @@ class TodoList extends Component {
             </div>
           )
         }
-        {expandContent&&expandContent.booking&&expandContent.booking==1&&(
+        {expandContent&&expandContent.booking&&expandContent.booking==1?(
             <div>
               <div className={styles.lineGl}></div>
               <div className={styles.buyBtn}>
-                <a onClick={this.goToOrder} className={styles.pbtnList} href="javascript:;">{expandContent.firstButton?expandContent.firstButton:'我要开团（免开团费）'} </a>
                 <a onClick={this.showToGBooking} className={styles.pbtn} href="javascript:;">{expandContent.secondButton?expandContent.secondButton:'我要参团'}</a>
+                <a onClick={this.goToOrder} className={styles.pbtnList} href="javascript:;">{expandContent.firstButton?expandContent.firstButton:'我要开团（免开团费）'} </a>
               </div>
             </div>
-          )
+          ):''
         }
         {
-          this.state.bookingStatus&&(
+          this.state.bookingStatus?(
             <div className={styles.showBooking}>
               <div className={styles.bookMak} onClick={this.closeToBooking}></div>
               <div className={styles.BookBox}>
@@ -342,17 +362,42 @@ class TodoList extends Component {
                 <div className={styles.bookname}>{awardList.name}</div>
                 <WhiteSpace size={'xl'} />
                 <div className={styles.booktype}>
-                  <h5>获取方式</h5>
+                  <h5>立即参团</h5>
                   <WhiteSpace size='lg' />
-                  <div className={styles.bookPrice}>{raffleData.paidDrawPrice} 元参团</div>
+                  <div className={styles.bookPrice}>只要 {raffleData.paidDrawPrice}元</div>
+                  <div className={styles.bookPrice}>已参团人数 {personNumber}</div>
                 </div>
+                <WhiteSpace size={'xl'} />
+                <List>
+                  <Item
+                    arrow="horizontal"
+                    multipleLine
+                    onClick={() => {
+                      router.push('/address');
+                    }}
+                    platform="android"
+                    wrap
+                  >
+                    收货信息：
+                    {
+                      defaultAddress&&defaultAddress[0]?(
+                        <div>
+                          <div>
+                            <Brief>姓名：{defaultAddress[0].receiveName}&nbsp; &nbsp; 电话：{defaultAddress[0].receivePhone}</Brief>
+                            <Brief>{defaultAddress[0].area} <br/> {defaultAddress[0].address}</Brief>
+                          </div>
+                        </div>
+                      ):(<Brief>你还没有填写地址</Brief>)
+                    }
+                  </Item>
+                </List>
                 <WhiteSpace size={'xl'} />
                 <div className={styles.bookBtn}>
                   <Button type="primary" onClick={this.payMonney}>确定</Button>
                 </div>
               </div>
             </div>
-          )
+          ):''
         }
       </div>
     );
