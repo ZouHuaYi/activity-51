@@ -116,7 +116,7 @@ class CoutTime extends React.Component{
     ctx.translate(hoursWidth/2,hoursWidth/2);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('距离面膜上市',0,-30*ratio);
+    ctx.fillText('距离抽奖截止',0,-30*ratio);
     ctx.restore();
 
     if(dt){

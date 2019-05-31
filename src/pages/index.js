@@ -362,7 +362,7 @@ class TodoList extends Component {
                 <div className={styles.bookname}>{awardList.name}</div>
                 <WhiteSpace size={'xl'} />
                 <div className={styles.booktype}>
-                  <h5>立即参团</h5>
+                  <h5>{expandContent.buyPageWords?expandContent.buyPageWords:'立即参团'}</h5>
                   <WhiteSpace size='lg' />
                   <div className={styles.bookPrice}>只要 {raffleData.paidDrawPrice}元</div>
                   <div className={styles.bookPrice}>已参团人数 {personNumber}</div>
